@@ -10,23 +10,25 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import categorySchema from "../../../schemas/categorySchema";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
-import { toast } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createCategory } from "../../../store/slices/categorySlice";
 import { useEffect } from "react";
+import slugify from "slugify";
+import { getCategoryData } from "../../../store/slices/categorySlice";
 
 const Category_Form = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { state } = useLocation();
-  const applicantDetails = state?.applicantDetails;
-
-  let agentId = useSelector((state) => state?.formData?.applicant?.agentId);
+  const applicantDetails = "ok";
 
   useEffect(() => {
+    if (id !== undefined) {
+      dispatch(getCategoryData(id));
+    }
+    console.log(id);
     // const getAgentId = JSON.parse(localStorage.getItem("agentId"));
     // if (getAgentId === undefined || getAgentId === null) {
     //   navigate("/login");
@@ -45,7 +47,7 @@ const Category_Form = () => {
   } = useForm({
     mode: "all",
     // ! pre fill form
-    defaultValues: applicantDetails,
+    // defaultValues:
     resolver: yupResolver(categorySchema),
   });
 
@@ -78,9 +80,15 @@ const Category_Form = () => {
     trigger("img_Base64");
   };
 
+  const onCategoryNameChange = (e) => {
+    const newName = e.target.value;
+    const newSlug = slugify(newName, { lower: true });
+    setValue("slug", newSlug);
+  };
+
   const onSubmit = (data) => {
+    console.log(data);
     dispatch(createCategory(data)).then(() => {
-      toast.success("Category Created Successfully2");
       reset();
       navigate("/category");
     });
@@ -101,6 +109,7 @@ const Category_Form = () => {
               fullWidth
               label="Category Name"
               {...register("name")}
+              onChange={onCategoryNameChange}
               error={!!errors.name}
               helperText={errors.name?.message}
             />
@@ -109,10 +118,12 @@ const Category_Form = () => {
           <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
-              label="Slug"
               {...register("slug")}
               error={!!errors.slug}
               helperText={errors.slug?.message}
+              InputProps={{
+                readOnly: true,
+              }}
             />
           </Grid>
 

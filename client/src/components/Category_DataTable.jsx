@@ -20,13 +20,13 @@ const Category_DatTable = () => {
   const dispatch = useDispatch();
 
   const handleView = (id) => {
-    navigate(`edit_category/${id}`);
+    navigate(`/dashboard/edit_category/${id}`);
   };
 
   const { allCategoryData, isLoading } = useSelector(
     (state) => state?.category
   );
-  console.log(allCategoryData.categories.length);
+  console.log(allCategoryData?.categories?.length);
 
   const renderItems = () => {
     const startIndex = (page - 1) * limit;
@@ -38,7 +38,7 @@ const Category_DatTable = () => {
 
   const finalData = renderItems();
 
-  console.log(renderItems());
+  console.log(renderItems()?.length);
 
   useEffect(() => {
     if (searchTerm === "") {

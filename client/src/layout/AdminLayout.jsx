@@ -1,24 +1,33 @@
-import { Navigate, Outlet } from "react-router-dom";
-// import Sidebars from "../components/SideBar";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Sidebars from "../components/SideBars";
 
 const AdminLayout = () => {
-  // eslint-disable-next-line no-unused-vars
-  let getToken = localStorage.getItem("token");
-  return getToken ? (
-    <>
-    <div style={{
-      display: "flex",
-      flexDirection: "row",
-    }}>
-
-    {/* <Sidebars/> */}
-      <main>
+  return (
+    <div style={{ display: "flex" }}>
+      <div
+        style={{
+          width: "250px",
+          backgroundColor: "#f0f0f0",
+          // padding: "20px",
+          marginRight: "20px",
+          position: "fixed",
+          height: "100%",
+        }}
+      >
+        <Sidebars />
+      </div>
+      <div
+        style={{
+          flex: 1,
+          marginLeft: "250px",
+          backgroundColor: "#ffffff",
+          overflowY: "auto",
+        }}
+      >
         <Outlet />
-      </main>
+      </div>
     </div>
-    </>
-  ) : (
-    <Navigate to={"/login"} />
   );
 };
 
