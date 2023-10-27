@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Pagination from "@mui/material/Pagination";
 import Select from "@mui/material/Select";
+import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import classes from "./table.module.css";
@@ -10,7 +11,11 @@ import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { getCategoryData } from "../store/slices/categorySlice";
+import {
+  deleteCategoryData,
+  getCategoryData,
+} from "../store/slices/categorySlice";
+import { toast } from "react-toastify";
 
 const Category_DatTable = () => {
   const navigate = useNavigate();
@@ -23,22 +28,17 @@ const Category_DatTable = () => {
     navigate(`/dashboard/edit_category/${id}`);
   };
 
+  const handleDelete = (id) => {
+    dispatch(deleteCategoryData(id)).then((res) => {
+      toast.success(res.payload.message);
+    });
+  };
+
   const { allCategoryData, isLoading } = useSelector(
     (state) => state?.category
   );
-  console.log(allCategoryData?.categories?.length);
 
-  const renderItems = () => {
-    const startIndex = (page - 1) * limit;
-    console.log(startIndex);
-    const endIndex = startIndex + limit;
-    console.log(endIndex);
-    return allCategoryData?.categories?.slice(startIndex, endIndex);
-  };
-
-  const finalData = renderItems();
-
-  console.log(renderItems()?.length);
+  console.log(allCategoryData);
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -76,7 +76,7 @@ const Category_DatTable = () => {
   return (
     <div
       style={{
-        marginTop: "90px",
+        marginTop: "40px",
         backgroundColor: "#ffffff",
         padding: "18px",
       }}
@@ -85,21 +85,37 @@ const Category_DatTable = () => {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           columnGap: "10px",
           marginBottom: "10px",
           marginRight: "10px",
         }}
       >
-        <TextField
-          label="Search"
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <Button variant="contained" color="secondary" onClick={handleSearch}>
-          Search
-        </Button>
+        <Box ml={3}>
+          <Button
+            onClick={() => navigate("/dashboard/add_category")}
+            variant="contained"
+            color="primary"
+          >
+            Add Category
+          </Button>
+        </Box>
+        <Box>
+          <TextField
+            label="Search"
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Button
+            sx={{ ml: 3 }}
+            variant="contained"
+            color="secondary"
+            onClick={handleSearch}
+          >
+            Search
+          </Button>
+        </Box>
       </div>
       {allCategoryData?.categories?.length === 0 ? (
         <p>No search results found</p>
@@ -120,7 +136,7 @@ const Category_DatTable = () => {
                 <hr />
               </td>
             </tr>
-            {finalData?.map((item) => (
+            {allCategoryData?.categories?.map((item) => (
               <tr key={item.id}>
                 <td>{isLoading ? <Skeleton /> : item?.name}</td>
                 <td>{isLoading ? <Skeleton /> : `  ${item?.slug}`}</td>
@@ -147,7 +163,8 @@ const Category_DatTable = () => {
                   ) : (
                     <Button
                       size="small"
-                      onClick={() => handleView(item)}
+                      color="error"
+                      onClick={() => handleDelete(item._id)}
                       variant="outlined"
                       startIcon={<DeleteForeverIcon />}
                     >

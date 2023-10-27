@@ -1,6 +1,6 @@
 import "./sidebar.css";
-import  { useState } from "react";
-import MenuBookIcon from '@mui/icons-material/MenuBook';
+import { useState } from "react";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 // import {
 //   RiHome4Line,
 //   RiTeamLine,
@@ -16,9 +16,10 @@ import {
   Sidebar,
   SubMenu,
   Menu,
-  MenuItem
+  MenuItem,
   //useProSidebar
 } from "react-pro-sidebar";
+import { Link } from "react-router-dom";
 
 function Sidebars() {
   //const { collapseSidebar } = useProSidebar();
@@ -61,7 +62,7 @@ function Sidebars() {
                     // textTransform: "uppercase",
                     fontWeight: "bold",
                     fontSize: 14,
-                    letterSpacing: "1px"
+                    letterSpacing: "1px",
                   }}
                 >
                   YOUR LOGO!..
@@ -72,15 +73,20 @@ function Sidebars() {
           </Menu>
 
           <Menu>
-            <MenuItem icon={<MenuBookIcon/>}>Dashboard</MenuItem>
-            <SubMenu defaultOpen label={"Professors"} icon={''}>
-              <MenuItem icon={''}>Active </MenuItem>
-              <MenuItem icon={''}>Ex Professors</MenuItem>
-              <MenuItem icon={''}>Probation Period</MenuItem>
+            <MenuItem icon={<MenuBookIcon />}>Dashboard</MenuItem>
+            <SubMenu defaultOpen label={"Category"} icon={""}>
+              <MenuItem icon={""}>
+                <Link to="category">All Category</Link>
+              </MenuItem>
+              <MenuItem icon={""}>
+                <Link to="add_category">Add Category</Link>
+              </MenuItem>
             </SubMenu>
-            <SubMenu defaultOpen label={"Records"} icon={''}>
-              <MenuItem icon={''}>Senior Students</MenuItem>
-              <MenuItem icon={''}>Junior Students</MenuItem>
+            <SubMenu defaultOpen label={"Recipe"} icon={""}>
+              <MenuItem icon={""}>All Recipe</MenuItem>
+              <MenuItem icon={""}>
+                <Link to="add_recipe">Add Recipe</Link>
+              </MenuItem>
             </SubMenu>
           </Menu>
         </main>

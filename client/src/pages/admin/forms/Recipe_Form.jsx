@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
   FormHelperText,
+  Autocomplete,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,24 +14,23 @@ import categorySchema from "../../../schemas/categorySchema";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  createCategory,
-  updateCategoryData,
-} from "../../../store/slices/categorySlice";
+import // createCategory,
+// updateCategoryData,
+"../../../store/slices/categorySlice";
 import { useEffect } from "react";
 import slugify from "slugify";
 
 const Category_Form = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
 
   const { allCategoryData } = useSelector((state) => state?.category);
 
-  const getDataByID = allCategoryData?.categories?.find(
-    (category) => category._id === id
-  );
-  console.log(getDataByID);
+  // const getDataByID = allCategoryData?.categories?.find(
+  //   (category) => category._id === id
+  // );
+  // console.log(getDataByID);
 
   useEffect(() => {
     // if (id !== undefined) {
@@ -47,7 +47,7 @@ const Category_Form = () => {
   const {
     register,
     handleSubmit,
-    reset,
+    // reset,
     watch,
     setValue,
     trigger,
@@ -55,8 +55,8 @@ const Category_Form = () => {
   } = useForm({
     mode: "all",
     // ! pre fill form
-    defaultValues: getDataByID,
-    resolver: yupResolver(categorySchema),
+    // defaultValues: getDataByID,
+    // resolver: yupResolver(categorySchema),
   });
 
   const img_Base64 = watch("img_Base64");
@@ -95,23 +95,24 @@ const Category_Form = () => {
   };
 
   const onSubmit = (data) => {
+    console.log("ok");
     console.log(data);
-    if (id) {
-      dispatch(
-        updateCategoryData({
-          data: data,
-          _id: id,
-        })
-      ).then(() => {
-        navigate("/dashboard/category");
-      });
-    } else {
-      console.log(data);
-      dispatch(createCategory(data)).then(() => {
-        reset();
-        navigate("/dashboard/category");
-      });
-    }
+    // if (id) {
+    //   dispatch(
+    //     updateCategoryData({
+    //       data: data,
+    //       _id: id,
+    //     })
+    //   ).then(() => {
+    //     navigate("/dashboard/category");
+    //   });
+    // } else {
+    //   console.log(data);
+    //   dispatch(createCategory(data)).then(() => {
+    //     reset();
+    //     navigate("/dashboard/category");
+    //   });
+    // }
   };
 
   return (
@@ -125,9 +126,37 @@ const Category_Form = () => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
+            <Autocomplete
+              multiple
+              id="tags-outlined"
+              options={allCategoryData.categories}
+              getOptionLabel={(option) => option.name}
+              getOptionSelected={(option, value) => {
+                console.log(option);
+                console.log(value);
+              }}
+              onChange={(e, values) =>
+                setValue(
+                  "categoryId",
+                  values.map((v) => v._id)
+                )
+              }
+              filterSelectedOptions
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Categories"
+                  placeholder="Select Categories"
+                  error={!!errors.selectedcategory}
+                  helperText={errors.selectedcategory?.message}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12}>
             <TextField
               fullWidth
-              label="Category Name"
+              label="Recipe Name"
               {...register("name")}
               onChange={onCategoryNameChange}
               error={!!errors.name}
@@ -149,16 +178,6 @@ const Category_Form = () => {
 
           <Grid item xs={12} sm={12}>
             <TextField
-              fullWidth
-              label="Sub Heading"
-              {...register("subName")}
-              error={!!errors.subName}
-              helperText={errors.subName?.message}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={12}>
-            <TextField
               rows={3}
               multiline
               fullWidth
@@ -166,6 +185,26 @@ const Category_Form = () => {
               {...register("description")}
               error={!!errors.description}
               helperText={errors.description?.message}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
+            <TextField
+              fullWidth
+              label="Cooking Time"
+              {...register("cookingTime")}
+              error={!!errors.cookingTime}
+              helperText={errors.cookingTime?.message}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
+            <TextField
+              fullWidth
+              label="Additional Note"
+              {...register("additionalNotes")}
+              error={!!errors.additionalNotes}
+              helperText={errors.additionalNotes?.message}
             />
           </Grid>
 

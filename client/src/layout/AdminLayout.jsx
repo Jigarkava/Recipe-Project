@@ -1,4 +1,3 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebars from "../components/SideBars";
 
@@ -20,7 +19,7 @@ const AdminLayout = () => {
       <div
         style={{
           flex: 1,
-          marginLeft: "250px",
+          marginLeft: "280px",
           backgroundColor: "#ffffff",
           overflowY: "auto",
         }}
