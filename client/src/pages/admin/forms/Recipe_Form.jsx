@@ -7,42 +7,58 @@ import {
   Button,
   FormHelperText,
   Autocomplete,
+  IconButton,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import categorySchema from "../../../schemas/categorySchema";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
-import // createCategory,
-// updateCategoryData,
-"../../../store/slices/categorySlice";
 import { useEffect } from "react";
 import slugify from "slugify";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { getCategoryData } from "../../../store/slices/categorySlice";
+import {
+  createRecipe,
+  updateRecipeData,
+} from "../../../store/slices/recipeSlice";
 
 const Category_Form = () => {
   const { id } = useParams();
-  // const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const { allCategoryData } = useSelector((state) => state?.category);
+  const { allRecipeData } = useSelector((state) => state?.recipe);
 
-  // const getDataByID = allCategoryData?.categories?.find(
-  //   (category) => category._id === id
-  // );
-  // console.log(getDataByID);
+  const getDataByID = allRecipeData?.recipes?.find(
+    (recipe) => recipe._id === id
+  );
+  console.log(getDataByID);
 
   useEffect(() => {
-    // if (id !== undefined) {
-    //   dispatch(getCategoryData(id));
-    // }
+    dispatch(getCategoryData()).then((res) => {
+      console.log(res, "ressss");
+    });
+    if (id !== undefined) {
+      dispatch(getCategoryData(id));
+    }
     // console.log(id);
     // const getAgentId = JSON.parse(localStorage.getItem("agentId"));
     // if (getAgentId === undefined || getAgentId === null) {
     //   navigate("/login");
     // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
+
+  const allCategoryData = useSelector(
+    (state) => state?.category?.allCategoryData
+  );
+
+  console.log(allCategoryData);
+
+  const isEdit = getDataByID !== undefined;
 
   const {
     register,
@@ -51,12 +67,20 @@ const Category_Form = () => {
     watch,
     setValue,
     trigger,
+    control,
     formState: { errors },
   } = useForm({
     mode: "all",
     // ! pre fill form
-    // defaultValues: getDataByID,
+    defaultValues: isEdit
+      ? getDataByID
+      : { ingredients: [{ name: "", quantity: "", unit: "", extraNote: "" }] },
     // resolver: yupResolver(categorySchema),
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    name: "ingredients",
+    control,
   });
 
   const img_Base64 = watch("img_Base64");
@@ -95,24 +119,22 @@ const Category_Form = () => {
   };
 
   const onSubmit = (data) => {
-    console.log("ok");
-    console.log(data);
-    // if (id) {
-    //   dispatch(
-    //     updateCategoryData({
-    //       data: data,
-    //       _id: id,
-    //     })
-    //   ).then(() => {
-    //     navigate("/dashboard/category");
-    //   });
-    // } else {
-    //   console.log(data);
-    //   dispatch(createCategory(data)).then(() => {
-    //     reset();
-    //     navigate("/dashboard/category");
-    //   });
-    // }
+    if (id) {
+      dispatch(
+        updateRecipeData({
+          data: data,
+          _id: id,
+        })
+      ).then(() => {
+        navigate("/dashboard/recipe");
+      });
+    } else {
+      console.log(data);
+      dispatch(createRecipe(data)).then(() => {
+        // reset();
+        navigate("/dashboard/recipe");
+      });
+    }
   };
 
   return (
@@ -129,8 +151,8 @@ const Category_Form = () => {
             <Autocomplete
               multiple
               id="tags-outlined"
-              options={allCategoryData.categories}
-              getOptionLabel={(option) => option.name}
+              options={allCategoryData?.categories}
+              getOptionLabel={(option) => option?.name}
               getOptionSelected={(option, value) => {
                 console.log(option);
                 console.log(value);
@@ -138,7 +160,7 @@ const Category_Form = () => {
               onChange={(e, values) =>
                 setValue(
                   "categoryId",
-                  values.map((v) => v._id)
+                  values?.map((v) => v?._id)
                 )
               }
               filterSelectedOptions
@@ -207,6 +229,69 @@ const Category_Form = () => {
               helperText={errors.additionalNotes?.message}
             />
           </Grid>
+
+          {fields.map((field, index) => (
+            <>
+              <Grid item sm={3}>
+                <TextField
+                  fullWidth
+                  label="Ingrediant Name"
+                  key={field.id}
+                  {...register(`ingredients.${index}.name`)}
+                />
+              </Grid>
+              <Grid item sm={2.5}>
+                <TextField
+                  label="Quantity"
+                  fullWidth
+                  key={field.id}
+                  {...register(`ingredients.${index}.quantity`)}
+                />
+              </Grid>
+              <Grid item sm={2.5}>
+                <TextField
+                  label="Unit"
+                  fullWidth
+                  key={field.id}
+                  {...register(`ingredients.${index}.unit`)}
+                />
+              </Grid>
+              <Grid item sm={3}>
+                <TextField
+                  label="Extra Note"
+                  fullWidth
+                  key={field.id}
+                  {...register(`ingredients.${index}.extraNote`)}
+                />
+              </Grid>
+
+              {index <= 0 && (
+                <Grid item sm={1}>
+                  <IconButton
+                    fullWidth
+                    color="success"
+                    onClick={() =>
+                      append({
+                        name: "",
+                        quantity: "",
+                        unit: "",
+                        extraNote: "",
+                      })
+                    }
+                  >
+                    <AddCircleOutlineIcon />
+                  </IconButton>
+                </Grid>
+              )}
+              {index > 0 && (
+                <Grid item sm={1}>
+                  <IconButton onClick={() => remove(index)} color="error">
+                    <RemoveCircleOutlineIcon />
+                  </IconButton>
+                </Grid>
+              )}
+            </>
+          ))}
 
           <Grid item sm={12}>
             {!img_Base64 && (

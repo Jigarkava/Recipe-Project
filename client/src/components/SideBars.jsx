@@ -1,17 +1,7 @@
 import "./sidebar.css";
 import { useState } from "react";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-// import {
-//   RiHome4Line,
-//   RiTeamLine,
-//   RiCalendar2Line,
-//   RiFolder2Line,
-//   RiUserFollowLine,
-//   RiPlantLine,
-//   RiStackLine,
-//   RiUserUnfollowLine
-// } from "react-icons/ri";
-// import { FiChevronsLeft, FiChevronsRight } from "react-icons/fi/";
+
 import {
   Sidebar,
   SubMenu,
@@ -20,10 +10,14 @@ import {
   //useProSidebar
 } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLogout } from "../store/slices/authSlice";
 
 function Sidebars() {
   //const { collapseSidebar } = useProSidebar();
   const [collapsed, setCollapsed] = useState(false);
+
+  const dispatch = useDispatch();
 
   const [toggled, setToggled] = useState(false);
 
@@ -73,7 +67,9 @@ function Sidebars() {
           </Menu>
 
           <Menu>
-            <MenuItem icon={<MenuBookIcon />}>Dashboard</MenuItem>
+            <MenuItem icon={<MenuBookIcon />}>
+              <Link to="/dashboard">Dashboard</Link>
+            </MenuItem>
             <SubMenu defaultOpen label={"Category"} icon={""}>
               <MenuItem icon={""}>
                 <Link to="category">All Category</Link>
@@ -83,11 +79,18 @@ function Sidebars() {
               </MenuItem>
             </SubMenu>
             <SubMenu defaultOpen label={"Recipe"} icon={""}>
-              <MenuItem icon={""}>All Recipe</MenuItem>
+              <MenuItem icon={""}>
+                <Link to="recipe">All Recipe</Link>
+              </MenuItem>
               <MenuItem icon={""}>
                 <Link to="add_recipe">Add Recipe</Link>
               </MenuItem>
             </SubMenu>
+            <MenuItem>
+              <Link to="/login" onClick={() => dispatch(setLogout())}>
+                Logout
+              </Link>
+            </MenuItem>
           </Menu>
         </main>
       </Sidebar>

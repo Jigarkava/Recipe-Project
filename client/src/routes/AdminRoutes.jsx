@@ -14,6 +14,7 @@ const AdminRoutes = () => {
         <Route path="edit_category/:id" element={<Category_Form />} />
         <Route path="recipe" element={<Recipe />} />
         <Route path="add_recipe" element={<Recipe_Form />} />
+        <Route path="edit_recipe/:id" element={<Recipe_Form />} />
         <Route path="demo" element={<Demo />} />
       </Route>
     </Routes>
