@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import categorySchema from "../../../schemas/categorySchema";
+import recipeSchema from "../../../schemas/recipeSchema";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,17 +38,7 @@ const Category_Form = () => {
   console.log(getDataByID);
 
   useEffect(() => {
-    dispatch(getCategoryData()).then((res) => {
-      console.log(res, "ressss");
-    });
-    if (id !== undefined) {
-      dispatch(getCategoryData(id));
-    }
-    // console.log(id);
-    // const getAgentId = JSON.parse(localStorage.getItem("agentId"));
-    // if (getAgentId === undefined || getAgentId === null) {
-    //   navigate("/login");
-    // }
+    dispatch(getCategoryData());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -75,7 +65,7 @@ const Category_Form = () => {
     defaultValues: isEdit
       ? getDataByID
       : { ingredients: [{ name: "", quantity: "", unit: "", extraNote: "" }] },
-    // resolver: yupResolver(categorySchema),
+    resolver: yupResolver(recipeSchema),
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -148,32 +138,35 @@ const Category_Form = () => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <Autocomplete
-              multiple
-              id="tags-outlined"
-              options={allCategoryData?.categories}
-              getOptionLabel={(option) => option?.name}
-              getOptionSelected={(option, value) => {
-                console.log(option);
-                console.log(value);
-              }}
-              onChange={(e, values) =>
-                setValue(
-                  "categoryId",
-                  values?.map((v) => v?._id)
-                )
-              }
-              filterSelectedOptions
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Categories"
-                  placeholder="Select Categories"
-                  error={!!errors.selectedcategory}
-                  helperText={errors.selectedcategory?.message}
-                />
-              )}
-            />
+            {allCategoryData?.categories ? (
+              <Autocomplete
+                multiple
+                id="tags-outlined"
+                options={allCategoryData?.categories}
+                getOptionLabel={(option) => option?.name}
+                // getOptionSelected={(option, value) => {
+                //   console.log(option);
+                //   console.log(value);
+                // }}
+                defaultValue={getDataByID?.categoryId}
+                onChange={(e, values) =>
+                  setValue(
+                    "categoryId",
+                    values?.map((v) => v?._id)
+                  )
+                }
+                filterSelectedOptions
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Categories"
+                    placeholder="Select Categories"
+                    error={!!errors.selectedcategory}
+                    helperText={errors.selectedcategory?.message}
+                  />
+                )}
+              />
+            ) : null}
           </Grid>
           <Grid item xs={12} sm={12}>
             <TextField
@@ -238,6 +231,8 @@ const Category_Form = () => {
                   label="Ingrediant Name"
                   key={field.id}
                   {...register(`ingredients.${index}.name`)}
+                  error={!!errors.ingredients?.[index]?.name}
+                  helperText={errors.ingredients?.[index]?.name?.message}
                 />
               </Grid>
               <Grid item sm={2.5}>
@@ -246,6 +241,8 @@ const Category_Form = () => {
                   fullWidth
                   key={field.id}
                   {...register(`ingredients.${index}.quantity`)}
+                  error={!!errors.ingredients?.[index]?.quantity}
+                  helperText={errors.ingredients?.[index]?.quantity?.message}
                 />
               </Grid>
               <Grid item sm={2.5}>
@@ -254,6 +251,8 @@ const Category_Form = () => {
                   fullWidth
                   key={field.id}
                   {...register(`ingredients.${index}.unit`)}
+                  error={!!errors.ingredients?.[index]?.unit}
+                  helperText={errors.ingredients?.[index]?.unit?.message}
                 />
               </Grid>
               <Grid item sm={3}>
