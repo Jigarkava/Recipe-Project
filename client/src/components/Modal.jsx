@@ -5,13 +5,14 @@ import {
   DialogContent,
   Button,
 } from "@mui/material";
+
 const Modal = () => {
   return (
     <>
       <Dialog open={open}>
         <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent>
-          <p>Are you sure you want to assign task to warehouse ?</p>
+          <p>Are you sure you want to Delete ?</p>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
