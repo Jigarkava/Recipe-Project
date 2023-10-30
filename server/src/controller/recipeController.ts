@@ -115,6 +115,18 @@ export const getRecipeById = asyncHandler(
   }
 );
 
+export const getRecipeBySlug = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { slug } = req.params;
+    const recipe = await Recipe.findOne({ slug }).populate("categoryId");
+    if (!recipe) {
+      res.status(StatusCodes.NOT_FOUND).json({ message: "Recipe not found" });
+      return;
+    }
+    res.status(StatusCodes.OK).json({ recipe });
+  }
+);
+
 export const updateRecipe = asyncHandler(
   async (req: Request, res: Response) => {
     const {
@@ -153,7 +165,9 @@ export const updateRecipe = asyncHandler(
     recipe.description = description || recipe.description;
     recipe.cookingTime = cookingTime || recipe.cookingTime;
     recipe.ingredients = ingredients || recipe.ingredients;
-    const response = await Recipe.updateOne({ _id }, req.body);
+    const response = await Recipe.updateOne({ _id }, req.body, {
+      new: true,
+    }).populate("categoryId");
     res
       .status(StatusCodes.OK)
       .json({ message: "Recipe updated", recipe: response });

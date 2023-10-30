@@ -4,7 +4,8 @@ import { toast } from "react-toastify";
 
 let initialState = {
   allRecipeData: [],
-  isLoading: false,
+  isLoading: true,
+  recipeBySlug: null,
 };
 
 export const createRecipe = createAsyncThunk(
@@ -64,17 +65,47 @@ export const updateRecipeData = createAsyncThunk(
   }
 );
 
+export const getRecipeBySlug = createAsyncThunk(
+  "getRecipeBySlug",
+  async (slug, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/recipe/getRecipeBySlug/${slug}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const recipeSlice = createSlice({
   name: "recipeData",
   initialState,
   //   reducers: {}
   extraReducers: (builder) => {
+    // ! getRecipeData
     builder.addCase(getRecipeData.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(getRecipeData.fulfilled, (state, action) => {
       state.isLoading = false;
       state.allRecipeData = action.payload;
+    });
+    builder.addCase(getRecipeData.rejected, (state) => {
+      state.isLoading = false;
+    });
+
+    // ! getRecipeByslug
+    builder.addCase(getRecipeBySlug.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getRecipeBySlug.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.recipeBySlug = action.payload;
+    });
+    builder.addCase(getRecipeBySlug.rejected, (state) => {
+      state.isLoading = false;
     });
   },
 });

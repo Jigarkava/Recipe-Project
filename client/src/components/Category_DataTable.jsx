@@ -5,7 +5,13 @@ import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import classes from "./table.module.css";
-import { Skeleton } from "@mui/material";
+import {
+  Skeleton,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +28,7 @@ const Category_DatTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
+
   const dispatch = useDispatch();
 
   const handleView = (id) => {
@@ -72,6 +79,12 @@ const Category_DatTable = () => {
   };
 
   const pageCount = Math.ceil(allCategoryData?.count / limit);
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   return (
     <div
@@ -161,15 +174,40 @@ const Category_DatTable = () => {
                   {isLoading ? (
                     <Skeleton />
                   ) : (
-                    <Button
-                      size="small"
-                      color="error"
-                      onClick={() => handleDelete(item._id)}
-                      variant="outlined"
-                      startIcon={<DeleteForeverIcon />}
-                    >
-                      Delete
-                    </Button>
+                    <>
+                      <Button
+                        size="small"
+                        color="error"
+                        // onClick={() => handleDelete(item._id)}
+                        onClick={handleClickOpen}
+                        variant="outlined"
+                        startIcon={<DeleteForeverIcon />}
+                      >
+                        Delete
+                      </Button>
+                      <Dialog open={open}>
+                        <DialogTitle>Are you sure?</DialogTitle>
+                        <DialogContent>
+                          <p>
+                            Are you sure you want to assign task to warehouse ?
+                          </p>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={() => setOpen(false)}>Cancel</Button>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            onClick={() => {
+                              handleDelete(item._id);
+                              setOpen(false);
+                            }}
+                          >
+                            Ok
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </>
                   )}
                 </td>
               </tr>

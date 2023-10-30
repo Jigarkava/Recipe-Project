@@ -1,8 +1,10 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Sidebars from "../components/SideBars";
 
 const AdminLayout = () => {
-  return (
+  let getToken = localStorage.getItem("token");
+
+  return getToken ? (
     <div style={{ display: "flex" }}>
       <div
         style={{
@@ -27,6 +29,8 @@ const AdminLayout = () => {
         <Outlet />
       </div>
     </div>
+  ) : (
+    <Navigate to={"/login"} />
   );
 };
 

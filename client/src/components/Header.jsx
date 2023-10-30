@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import Logo from '../assets/Logo.png'
+import Logo from "../assets/Logo.png";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -33,13 +33,17 @@ const Header = () => {
       }}
     >
       <Box>
-        <Link to="/dashboard">
+        <Link to="/">
           <img src={Logo} alt="Logo" height={30} width={134} />
         </Link>
       </Box>
 
       <Box>
-        <Button onClick={()=> navigate('/login')} variant="contained" color="primary">
+        <Button
+          onClick={() => navigate("/login")}
+          variant="contained"
+          color="primary"
+        >
           SignIn
         </Button>
 

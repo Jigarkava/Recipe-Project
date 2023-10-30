@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Box, Typography, Button } from "@mui/material";
-const RecipeCard = ({ image, title }) => {
+const RecipeCard = ({ image, recipeName, handleClick }) => {
   return (
     <>
       <Box
@@ -8,18 +8,25 @@ const RecipeCard = ({ image, title }) => {
           display: "flex",
           flexDirection: "column",
           gap: 1,
+          width: "100%",
+          alignItems: "center",
         }}
       >
-        <Box>
-          <img src={image} alt="" />
+        <Box
+          sx={{
+            height: "300px",
+            width: "368px",
+          }}
+        >
+          <img src={image} height={"100%"} width={"100%"} alt="Loading" />
         </Box>
         <Box>
           <Typography variant="body2" color="initial">
-            {title}
+            {recipeName}
           </Typography>
         </Box>
         <Box>
-          <Button variant="outlined" color="primary">
+          <Button variant="outlined" color="primary" onClick={handleClick}>
             More Details
           </Button>
         </Box>

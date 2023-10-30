@@ -225,16 +225,6 @@ const Category_Form = () => {
 
           {fields.map((field, index) => (
             <>
-              <Grid item sm={3}>
-                <TextField
-                  fullWidth
-                  label="Ingrediant Name"
-                  key={field.id}
-                  {...register(`ingredients.${index}.name`)}
-                  error={!!errors.ingredients?.[index]?.name}
-                  helperText={errors.ingredients?.[index]?.name?.message}
-                />
-              </Grid>
               <Grid item sm={2.5}>
                 <TextField
                   label="Quantity"
@@ -245,6 +235,7 @@ const Category_Form = () => {
                   helperText={errors.ingredients?.[index]?.quantity?.message}
                 />
               </Grid>
+
               <Grid item sm={2.5}>
                 <TextField
                   label="Unit"
@@ -255,6 +246,18 @@ const Category_Form = () => {
                   helperText={errors.ingredients?.[index]?.unit?.message}
                 />
               </Grid>
+
+              <Grid item sm={3}>
+                <TextField
+                  fullWidth
+                  label="Ingrediant Name"
+                  key={field.id}
+                  {...register(`ingredients.${index}.name`)}
+                  error={!!errors.ingredients?.[index]?.name}
+                  helperText={errors.ingredients?.[index]?.name?.message}
+                />
+              </Grid>
+
               <Grid item sm={3}>
                 <TextField
                   label="Extra Note"
