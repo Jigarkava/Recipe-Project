@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 let initialState = {
   allCategoryData: [],
-  isLoading: false,
+  isLoading: true,
 };
 
 export const createCategory = createAsyncThunk(

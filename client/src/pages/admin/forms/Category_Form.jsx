@@ -15,6 +15,7 @@ import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createCategory,
+  getCategoryData,
   updateCategoryData,
 } from "../../../store/slices/categorySlice";
 import { useEffect } from "react";
@@ -22,25 +23,20 @@ import slugify from "slugify";
 
 const Category_Form = () => {
   const { id } = useParams();
+  console.log(id);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { allCategoryData } = useSelector((state) => state?.category);
+  console.log(allCategoryData, "allCategoryData");
 
   const getDataByID = allCategoryData?.categories?.find(
     (category) => category._id === id
   );
-  console.log(getDataByID);
+  console.log(getDataByID, "GetdataByID");
 
   useEffect(() => {
-    // if (id !== undefined) {
-    //   dispatch(getCategoryData(id));
-    // }
-    // console.log(id);
-    // const getAgentId = JSON.parse(localStorage.getItem("agentId"));
-    // if (getAgentId === undefined || getAgentId === null) {
-    //   navigate("/login");
-    // }
+    dispatch(getCategoryData());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -113,6 +109,10 @@ const Category_Form = () => {
       });
     }
   };
+
+  if (getDataByID === undefined) {
+    return <p>loading</p>;
+  }
 
   return (
     <Box sx={{ backgroundColor: "white" }}>
