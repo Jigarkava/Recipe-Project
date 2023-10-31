@@ -22,6 +22,7 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { getCategoryData } from "../../../store/slices/categorySlice";
 import {
   createRecipe,
+  getRecipeById,
   updateRecipeData,
 } from "../../../store/slices/recipeSlice";
 
@@ -30,8 +31,11 @@ const Category_Form = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { allRecipeData } = useSelector((state) => state?.recipe);
+  const { allRecipeData, recipeDataById, status } = useSelector(
+    (state) => state?.recipe
+  );
   console.log("allrecipedata", allRecipeData);
+  console.log("recipeDataById", recipeDataById);
 
   const getDataByID = allRecipeData?.recipes?.find(
     (recipe) => recipe._id === id
@@ -39,7 +43,10 @@ const Category_Form = () => {
   console.log("getdatabyid", getDataByID);
 
   useEffect(() => {
-    dispatch(getCategoryData());
+    if (id) {
+      dispatch(getCategoryData());
+      dispatch(getRecipeById(id));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -55,7 +62,7 @@ const Category_Form = () => {
 
   console.log(defaultCategoryData);
 
-  const isEdit = getDataByID !== undefined;
+  // const isEdit = recipeDataById !== undefined;
 
   const {
     register,
@@ -69,9 +76,15 @@ const Category_Form = () => {
   } = useForm({
     mode: "all",
     // ! pre fill form
-    defaultValues: isEdit
-      ? getDataByID
-      : { ingredients: [{ name: "", quantity: "", unit: "", extraNote: "" }] },
+    // defaultValues: isEdit
+    //   ? recipeDataById?.recipe
+    //   : { ingredients: [{ name: "", quantity: "", unit: "", extraNote: "" }] },
+    values:
+      id !== undefined
+        ? recipeDataById?.recipe
+        : {
+            ingredients: [{ name: "", quantity: "", unit: "", extraNote: "" }],
+          },
     resolver: yupResolver(recipeSchema),
   });
 
@@ -134,6 +147,10 @@ const Category_Form = () => {
     }
   };
 
+  if (status) {
+    return <p>Loading......</p>;
+  }
+
   return (
     <Box sx={{ backgroundColor: "white" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -151,7 +168,8 @@ const Category_Form = () => {
                 multiple
                 options={allCategoryData?.categories}
                 getOptionLabel={(option) => option?.name}
-                defaultValue={defaultCategoryData}
+                // defaultValue={defaultCategoryData}
+                defaultValue={id && recipeDataById?.recipe?.categoryId}
                 onChange={(e, values) =>
                   setValue(
                     "categoryId",

@@ -6,6 +6,8 @@ let initialState = {
   allRecipeData: [],
   isLoading: true,
   recipeBySlug: null,
+  recipeDataById: [],
+  status: false,
 };
 
 export const createRecipe = createAsyncThunk(
@@ -66,6 +68,19 @@ export const updateRecipeData = createAsyncThunk(
   }
 );
 
+export const getRecipeById = createAsyncThunk(
+  "getRecipeById",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/recipe/${_id}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 export const getRecipeBySlug = createAsyncThunk(
   "getRecipeBySlug",
   async (slug, { rejectWithValue }) => {
@@ -107,6 +122,18 @@ const recipeSlice = createSlice({
     });
     builder.addCase(getRecipeBySlug.rejected, (state) => {
       state.isLoading = false;
+    });
+
+    // ! getRecipeById
+    builder.addCase(getRecipeById.pending, (state) => {
+      state.status = true;
+    });
+    builder.addCase(getRecipeById.fulfilled, (state, action) => {
+      state.status = false;
+      state.recipeDataById = action.payload;
+    });
+    builder.addCase(getRecipeById.rejected, (state) => {
+      state.status = false;
     });
   },
 });

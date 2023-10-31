@@ -46,7 +46,8 @@ const Category_Form = () => {
     formState: { errors },
   } = useForm({
     mode: "all",
-    values: id ? getDataByID?.category : {},
+    // defaultValues: id !== undefined ? getDataByID?.category : {},
+    values: id !== undefined ? getDataByID?.category : {},
     // ! pre fill form
     resolver: yupResolver(categorySchema),
   });
