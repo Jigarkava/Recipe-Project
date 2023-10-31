@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 let initialState = {
   allCategoryData: [],
   isLoading: true,
+  getDataByID: [],
+  status: false,
 };
 
 export const createCategory = createAsyncThunk(
@@ -63,56 +65,23 @@ export const deleteCategoryData = createAsyncThunk(
   }
 );
 
+export const getCategoryDataById = createAsyncThunk(
+  "getCategoryDataById",
+  async (_id, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/category/getCategory`, {
+        params: { _id },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const categorySlice = createSlice({
   name: "categoryData",
   initialState,
-  //   reducers: {
-  //     addApplicantData: (state, action) => {
-  //       state.applicant = action.payload;
-  //     },
-
-  //     addDependentsData: (state, action) => {
-  //       const { aadharNumber } = action.payload;
-  //       action.payload.aadharNumber = parseInt(aadharNumber);
-  //       state.dependents.push(action.payload);
-  //     },
-
-  //     editDependentData: (state, action) => {
-  //       const { dependentId, updatedData } = action.payload;
-
-  //       console.log(dependentId, updatedData);
-
-  //       updatedData.aadharNumber = parseInt(updatedData.aadharNumber);
-
-  //       const index = state.dependents.findIndex(
-  //         (dependent) => dependent.dependentId === updatedData.dependentId
-  //       );
-
-  //       if (
-  //         index !== undefined &&
-  //         index >= 0 &&
-  //         index < state.dependents.length
-  //       ) {
-  //         state.dependents[index] = {
-  //           ...state.dependents[index],
-  //           ...updatedData,
-  //         };
-  //       }
-  //     },
-
-  //     deleteDependent: (state, action) => {
-  //       const dependentId = action.payload;
-  //       state.dependents = state.dependents.filter(
-  //         (dependent) => dependent.dependentId !== dependentId
-  //       );
-  //     },
-
-  //     clearAllData: (state) => {
-  //       state.applicant = {};
-  //       state.dependents = [];
-  //       console.log("clear success");
-  //     },
-  //   },
   extraReducers: (builder) => {
     builder.addCase(getCategoryData.pending, (state) => {
       state.isLoading = true;
@@ -122,8 +91,20 @@ const categorySlice = createSlice({
       state.isLoading = false;
       state.allCategoryData = action.payload;
     });
+
+    builder.addCase(getCategoryDataById.pending, (state) => {
+      state.status = true;
+    });
+
+    builder.addCase(getCategoryDataById.fulfilled, (state, action) => {
+      state.status = false;
+      state.getDataByID = action.payload;
+    });
   },
 });
+
+// export const getCategoryStatus = (state) => state.category.isLoading;
+// export const getAllRecipeData = (state) => state.category.allCategoryData;
 
 export const {
   addApplicantData,

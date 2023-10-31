@@ -15,7 +15,7 @@ import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import {
   createCategory,
-  getCategoryData,
+  getCategoryDataById,
   updateCategoryData,
 } from "../../../store/slices/categorySlice";
 import { useEffect } from "react";
@@ -27,16 +27,12 @@ const Category_Form = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { allCategoryData } = useSelector((state) => state?.category);
-  console.log(allCategoryData, "allCategoryData");
-
-  const getDataByID = allCategoryData?.categories?.find(
-    (category) => category._id === id
-  );
-  console.log(getDataByID, "GetdataByID");
+  const { getDataByID, status } = useSelector((state) => state?.category);
 
   useEffect(() => {
-    dispatch(getCategoryData());
+    if (id) {
+      dispatch(getCategoryDataById(id));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,8 +46,8 @@ const Category_Form = () => {
     formState: { errors },
   } = useForm({
     mode: "all",
+    values: id ? getDataByID?.category : {},
     // ! pre fill form
-    defaultValues: getDataByID,
     resolver: yupResolver(categorySchema),
   });
 
@@ -110,8 +106,8 @@ const Category_Form = () => {
     }
   };
 
-  if (getDataByID === undefined) {
-    return <p>loading</p>;
+  if (status) {
+    return <p>Loading......</p>;
   }
 
   return (
@@ -120,7 +116,7 @@ const Category_Form = () => {
         <Grid p={3} container spacing={2}>
           <Grid item sm={12}>
             <Typography variant="h4" textAlign={"center"} color={"purple"}>
-              Add Category
+              {id ? "Edit" : "Add"} Category
             </Typography>
           </Grid>
 

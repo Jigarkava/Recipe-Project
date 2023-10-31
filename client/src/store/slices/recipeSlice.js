@@ -30,6 +30,7 @@ export const getRecipeData = createAsyncThunk(
       const response = await api.get("/recipe", {
         params: payload,
       });
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);

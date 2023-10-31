@@ -31,11 +31,12 @@ const Category_Form = () => {
   const dispatch = useDispatch();
 
   const { allRecipeData } = useSelector((state) => state?.recipe);
+  console.log("allrecipedata", allRecipeData);
 
   const getDataByID = allRecipeData?.recipes?.find(
     (recipe) => recipe._id === id
   );
-  console.log(getDataByID);
+  console.log("getdatabyid", getDataByID);
 
   useEffect(() => {
     dispatch(getCategoryData());
@@ -46,7 +47,13 @@ const Category_Form = () => {
     (state) => state?.category?.allCategoryData
   );
 
-  console.log(allCategoryData);
+  console.log("allCategoryData", allCategoryData);
+
+  const defaultCategoryData = allCategoryData?.categories?.filter((c) =>
+    getDataByID?.categoryId?.includes(c._id)
+  );
+
+  console.log(defaultCategoryData);
 
   const isEdit = getDataByID !== undefined;
 
@@ -138,17 +145,13 @@ const Category_Form = () => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
+            {console.log(getDataByID?.categoryId, "1212121")}
             {allCategoryData?.categories ? (
               <Autocomplete
                 multiple
-                id="tags-outlined"
                 options={allCategoryData?.categories}
                 getOptionLabel={(option) => option?.name}
-                // getOptionSelected={(option, value) => {
-                //   console.log(option);
-                //   console.log(value);
-                // }}
-                defaultValue={getDataByID?.categoryId}
+                defaultValue={defaultCategoryData}
                 onChange={(e, values) =>
                   setValue(
                     "categoryId",

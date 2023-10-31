@@ -34,7 +34,6 @@ const Recipe_DatTable = () => {
   const { allRecipeData, isLoading } = useSelector((state) => state?.recipe);
 
   console.log(allRecipeData);
-
   useEffect(() => {
     if (searchTerm === "") {
       fetchData(page, limit, searchTerm);
