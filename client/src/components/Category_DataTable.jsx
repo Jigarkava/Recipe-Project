@@ -23,6 +23,7 @@ const Category_DatTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryIdToDelete, setCategoryIdToDelete] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -36,6 +37,8 @@ const Category_DatTable = () => {
       .unwrap()
       .then(() => {
         toast.success("category Deleted Successfully");
+        setCategoryIdToDelete(null);
+        setIsOpen(false);
         fetchData(page, limit, searchTerm);
       })
       .catch((err) => toast.error(err.message));
@@ -88,6 +91,7 @@ const Category_DatTable = () => {
 
   const handleOpen = (id) => {
     console.log(id);
+    setCategoryIdToDelete(id);
     setIsOpen(true);
   };
 
@@ -202,9 +206,7 @@ const Category_DatTable = () => {
                       <Button
                         size="small"
                         color="error"
-                        // onClick={() => console.log(item._id)}
-                        // onClick={() => handleDelete(item._id)}
-                        onClick={() => handleOpen()}
+                        onClick={() => handleOpen(item._id)}
                         variant="outlined"
                         startIcon={<DeleteForeverIcon />}
                       >
@@ -216,7 +218,7 @@ const Category_DatTable = () => {
                         confirmMessage={
                           "Are you sure you want to delete Category"
                         }
-                        onConfirm={() => handleDelete(item._id)}
+                        onConfirm={() => handleDelete(categoryIdToDelete)}
                       />
                     </>
                   )}

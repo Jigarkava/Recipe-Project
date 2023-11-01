@@ -13,12 +13,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { toast } from "react-toastify";
 import { getRecipeData, deleteRecipeData } from "../store/slices/recipeSlice";
+import Modal from "./Modal";
 
 const Recipe_DatTable = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryIdToDelete, setCategoryIdToDelete] = useState(null);
+
   const dispatch = useDispatch();
 
   const handleView = (id) => {
@@ -26,10 +29,14 @@ const Recipe_DatTable = () => {
   };
 
   const handleDelete = (id) => {
-    dispatch(deleteRecipeData(id)).then((res) => {
-      toast.success(res.payload.message);
-      fetchData(page, limit, searchTerm);
-    });
+    dispatch(deleteRecipeData(id))
+      .unwrap()
+      .then(() => {
+        toast.success("Recipe deleted Successfully");
+        setCategoryIdToDelete(null);
+        setIsOpen(false);
+        fetchData(page, limit, searchTerm);
+      });
   };
 
   const { allRecipeData, isLoading } = useSelector((state) => state?.recipe);
@@ -69,6 +76,19 @@ const Recipe_DatTable = () => {
   const pageCount = Math.ceil(
     allRecipeData.count ? allRecipeData.count[0]?.count / limit : 1
   );
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = (id) => {
+    console.log(id);
+    setCategoryIdToDelete(id);
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   if (isLoading) {
     return <p>Loading</p>;
   }
@@ -174,15 +194,25 @@ const Recipe_DatTable = () => {
                   {isLoading ? (
                     <Skeleton />
                   ) : (
-                    <Button
-                      size="small"
-                      color="error"
-                      onClick={() => handleDelete(item._id)}
-                      variant="outlined"
-                      startIcon={<DeleteForeverIcon />}
-                    >
-                      Delete
-                    </Button>
+                    <>
+                      <Button
+                        size="small"
+                        color="error"
+                        onClick={() => handleOpen(item._id)}
+                        variant="outlined"
+                        startIcon={<DeleteForeverIcon />}
+                      >
+                        Delete
+                      </Button>
+                      <Modal
+                        isOpen={isOpen}
+                        handleClose={handleClose}
+                        confirmMessage={
+                          "Are you sure you want to delete Recipe"
+                        }
+                        onConfirm={() => handleDelete(categoryIdToDelete)}
+                      />
+                    </>
                   )}
                 </td>
               </tr>
