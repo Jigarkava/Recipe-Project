@@ -15,7 +15,7 @@ export const createRecipe = createAsyncThunk(
   async (dispatch) => {
     try {
       const response = await api.post("/recipe", dispatch);
-      toast.success("Recipe Created Successfully1");
+      toast.success("Recipe Created Successfully");
       console.log(response);
       return response;
     } catch (error) {
@@ -62,6 +62,7 @@ export const updateRecipeData = createAsyncThunk(
     try {
       const response = await api.put(`/recipe/${_id}`, data);
       console.log(response.data);
+      toast.success("Recipe Updated Successfully");
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }

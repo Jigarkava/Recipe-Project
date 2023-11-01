@@ -10,12 +10,8 @@ const recipeSchema = Yup.object({
     ),
   description: Yup.string().required("Please Enter Description"),
   cookingTime: Yup.string()
-    .required("Please Enter Sub Heading")
-    .min(2, "Sub Heading Must Be At Least 2 Characters")
-    .matches(
-      /^[a-zA-Z\s][a-zA-Z0-9\s]*$/,
-      "Sub Heading Must Start With a Letter"
-    ),
+    .required("Please Enter Cooking Time")
+    .min(2, "Cooking Time Must Be At Least 2 Characters"),
 
   ingredients: Yup.array().of(
     Yup.object().shape({
@@ -26,8 +22,12 @@ const recipeSchema = Yup.object({
           /^[a-zA-Z\s][a-zA-Z0-9\s]*$/,
           "Ingrediant Name Must Start With a Letter"
         ),
-      quantity: Yup.string().required("Please enter Quantity"),
-      unit: Yup.string().required("Please enter Unit"),
+      quantity: Yup.string()
+        .required("Please enter Quantity")
+        .matches(/^[0-9]+$/, "Please enter numbers only"),
+      unit: Yup.string()
+        .required("Please enter Unit")
+        .matches(/^[a-zA-Z\s][a-zA-Z0-9\s]*$/, "Unit Must Start With a Letter"),
     })
   ),
   img_Base64: Yup.mixed().required("Please Enter Image"),

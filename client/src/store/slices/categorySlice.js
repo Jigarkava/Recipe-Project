@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../utils/api";
-import { toast } from "react-toastify";
 
 let initialState = {
   allCategoryData: [],
@@ -11,13 +10,12 @@ let initialState = {
 
 export const createCategory = createAsyncThunk(
   "createCategory",
-  async (dispatch) => {
+  async (dispatch, { rejectWithValue }) => {
     try {
       const response = await api.post("/category", dispatch);
-      toast.success("Category Created Successfully1");
       return response;
     } catch (error) {
-      toast.error("Something Went Wrong");
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -32,7 +30,7 @@ export const getCategoryData = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -40,13 +38,12 @@ export const getCategoryData = createAsyncThunk(
 export const updateCategoryData = createAsyncThunk(
   "updateCategoryData",
   async ({ data, _id }, { rejectWithValue }) => {
-    console.log(data);
-    console.log(_id);
     try {
       const response = await api.put(`/category/${_id}`, data);
       console.log(response.data);
+      return response;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -60,7 +57,7 @@ export const deleteCategoryData = createAsyncThunk(
       console.log(response.data);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -74,7 +71,7 @@ export const getCategoryDataById = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -102,9 +99,6 @@ const categorySlice = createSlice({
     });
   },
 });
-
-// export const getCategoryStatus = (state) => state.category.isLoading;
-// export const getAllRecipeData = (state) => state.category.allCategoryData;
 
 export const {
   addApplicantData,

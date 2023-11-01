@@ -1,52 +1,52 @@
 .theader {
-    color: #fff;
-    font-size: 18px;
+  color: #fff;
+  font-size: 18px;
 }
 
 .tblHeader {
-    position: sticky;
-    top: 100px;
-    z-index: 2000;
-    background-color: #003f7d;
-    color: white;
-    height: 40px;
+  position: sticky;
+  top: 100px;
+  z-index: 1;
+  background-color: #003f7d;
+  color: white;
+  height: 40px;
 }
 
 td {
-    font-size: medium;
+  font-size: medium;
 }
 
 .pageLabel {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .tblPage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 35px;
 }
 th {
-    color: #003F7D;
+  color: #003f7d;
 }
 
 table {
-    width: 100%;
+  width: 100%;
 }
 
 hr {
-    height: 2px;
+  height: 2px;
 }
 
 tr:nth-child(even) {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 td {
-    padding: 8px;
-    text-align: center;
+  padding: 8px;
+  text-align: center;
 }
 
 .deleteBtn {
-    text-align: left;
+  text-align: left;
 }

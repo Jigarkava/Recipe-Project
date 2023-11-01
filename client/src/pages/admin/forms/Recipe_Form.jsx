@@ -19,12 +19,13 @@ import { useEffect } from "react";
 import slugify from "slugify";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { getCategoryData } from "../../../store/slices/categorySlice";
 import {
   createRecipe,
   getRecipeById,
   updateRecipeData,
 } from "../../../store/slices/recipeSlice";
+import { toast } from "react-toastify";
+import { getCategoryData } from "../../../store/slices/categorySlice";
 
 const Category_Form = () => {
   const { id } = useParams();
@@ -37,15 +38,10 @@ const Category_Form = () => {
   console.log("allrecipedata", allRecipeData);
   console.log("recipeDataById", recipeDataById);
 
-  const getDataByID = allRecipeData?.recipes?.find(
-    (recipe) => recipe._id === id
-  );
-  console.log("getdatabyid", getDataByID);
-
   useEffect(() => {
+    dispatch(getCategoryData());
     if (id) {
-      dispatch(getCategoryData());
-      dispatch(getRecipeById(id));
+      dispatch(getRecipeById(id)).catch((err) => toast.error(err));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -55,12 +51,6 @@ const Category_Form = () => {
   );
 
   console.log("allCategoryData", allCategoryData);
-
-  const defaultCategoryData = allCategoryData?.categories?.filter((c) =>
-    getDataByID?.categoryId?.includes(c._id)
-  );
-
-  console.log(defaultCategoryData);
 
   // const isEdit = recipeDataById !== undefined;
 
@@ -157,12 +147,11 @@ const Category_Form = () => {
         <Grid p={3} container spacing={2}>
           <Grid item sm={12}>
             <Typography variant="h4" textAlign={"center"} color={"purple"}>
-              Add Category
+              Add Recipe
             </Typography>
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            {console.log(getDataByID?.categoryId, "1212121")}
             {allCategoryData?.categories ? (
               <Autocomplete
                 multiple

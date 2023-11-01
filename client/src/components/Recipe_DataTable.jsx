@@ -28,6 +28,7 @@ const Recipe_DatTable = () => {
   const handleDelete = (id) => {
     dispatch(deleteRecipeData(id)).then((res) => {
       toast.success(res.payload.message);
+      fetchData(page, limit, searchTerm);
     });
   };
 
@@ -65,7 +66,12 @@ const Recipe_DatTable = () => {
     fetchData(page, limit, searchTerm);
   };
 
-  const pageCount = Math.ceil(allRecipeData?.count / limit);
+  const pageCount = Math.ceil(
+    allRecipeData.count ? allRecipeData.count[0]?.count / limit : 1
+  );
+  if (isLoading) {
+    return <p>Loading</p>;
+  }
 
   return (
     <div
@@ -136,6 +142,19 @@ const Recipe_DatTable = () => {
                 <td>{isLoading ? <Skeleton /> : `  ${item?.slug}`}</td>
                 <td>{isLoading ? <Skeleton /> : item?.cookingTime}</td>
                 <td>{isLoading ? <Skeleton /> : item?.description}</td>
+                <td>
+                  {isLoading ? (
+                    <Skeleton variant="rectangular" height={"80px"} />
+                  ) : (
+                    <>
+                      <img
+                        height={"80px"}
+                        src={item?.img_Base64}
+                        alt="Not Found"
+                      />
+                    </>
+                  )}
+                </td>
 
                 <td>
                   {isLoading ? (

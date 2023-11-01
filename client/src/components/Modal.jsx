@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   Dialog,
   DialogActions,
@@ -6,24 +7,27 @@ import {
   Button,
 } from "@mui/material";
 
-const Modal = () => {
+const Modal = ({ confirmMessage, onConfirm, isOpen, handleClose }) => {
   return (
     <>
-      <Dialog open={open}>
+      <Dialog
+        open={isOpen}
+        onClose={handleClose}
+        sx={{
+          backgroundColor: "#35343400",
+        }}
+      >
         <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent>
-          <p>Are you sure you want to Delete ?</p>
+          <p>{confirmMessage}</p>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={handleClose}>Cancel</Button>
           <Button
             variant="contained"
             color="primary"
             type="submit"
-            onClick={() => {
-              handleDelete(item._id);
-              setOpen(false);
-            }}
+            onClick={onConfirm}
           >
             Ok
           </Button>

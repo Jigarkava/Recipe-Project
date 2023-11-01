@@ -5,13 +5,7 @@ import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import classes from "./table.module.css";
-import {
-  Skeleton,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  DialogContent,
-} from "@mui/material";
+import { Skeleton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +16,7 @@ import {
   getCategoryData,
 } from "../store/slices/categorySlice";
 import { toast } from "react-toastify";
+import Modal from "./Modal";
 
 const Category_DatTable = () => {
   const navigate = useNavigate();
@@ -36,9 +31,14 @@ const Category_DatTable = () => {
   };
 
   const handleDelete = (id) => {
-    dispatch(deleteCategoryData(id)).then((res) => {
-      toast.success(res.payload.message);
-    });
+    console.log(id);
+    dispatch(deleteCategoryData(id))
+      .unwrap()
+      .then(() => {
+        toast.success("category Deleted Successfully");
+        fetchData(page, limit, searchTerm);
+      })
+      .catch((err) => toast.error(err.message));
   };
 
   const { allCategoryData, isLoading } = useSelector(
@@ -48,6 +48,7 @@ const Category_DatTable = () => {
   console.log(allCategoryData);
 
   useEffect(() => {
+    console.log("ok");
     if (searchTerm === "") {
       fetchData(page, limit, searchTerm);
     }
@@ -61,7 +62,10 @@ const Category_DatTable = () => {
       searchTerm: searchTerms,
     };
     console.log(queryParams);
-    dispatch(getCategoryData(queryParams));
+    dispatch(getCategoryData(queryParams))
+      .unwrap()
+      // .then(() => {})
+      .catch((err) => toast.error(err));
   };
 
   const handlePageChange = (event, newPage) => {
@@ -80,11 +84,18 @@ const Category_DatTable = () => {
 
   const pageCount = Math.ceil(allCategoryData?.count / limit);
 
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleOpen = (id) => {
+    console.log(id);
+    setIsOpen(true);
   };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  console.warn("Component re rendereddd");
 
   return (
     <div
@@ -155,6 +166,19 @@ const Category_DatTable = () => {
                 <td>{isLoading ? <Skeleton /> : `  ${item?.slug}`}</td>
                 <td>{isLoading ? <Skeleton /> : item?.subName}</td>
                 <td>{isLoading ? <Skeleton /> : item?.description}</td>
+                <td>
+                  {isLoading ? (
+                    <Skeleton />
+                  ) : (
+                    <>
+                      <img
+                        height={"80px"}
+                        src={item?.img_Base64}
+                        alt="Not Found"
+                      />
+                    </>
+                  )}
+                </td>
 
                 <td>
                   {isLoading ? (
@@ -178,35 +202,22 @@ const Category_DatTable = () => {
                       <Button
                         size="small"
                         color="error"
+                        // onClick={() => console.log(item._id)}
                         // onClick={() => handleDelete(item._id)}
-                        onClick={handleClickOpen}
+                        onClick={() => handleOpen()}
                         variant="outlined"
                         startIcon={<DeleteForeverIcon />}
                       >
                         Delete
                       </Button>
-                      <Dialog open={open}>
-                        <DialogTitle>Are you sure?</DialogTitle>
-                        <DialogContent>
-                          <p>
-                            Are you sure you want to assign task to warehouse ?
-                          </p>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={() => setOpen(false)}>Cancel</Button>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            onClick={() => {
-                              handleDelete(item._id);
-                              setOpen(false);
-                            }}
-                          >
-                            Ok
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
+                      <Modal
+                        isOpen={isOpen}
+                        handleClose={handleClose}
+                        confirmMessage={
+                          "Are you sure you want to delete Category"
+                        }
+                        onConfirm={() => handleDelete(item._id)}
+                      />
                     </>
                   )}
                 </td>

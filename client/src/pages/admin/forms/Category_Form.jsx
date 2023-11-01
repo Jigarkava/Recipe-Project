@@ -20,6 +20,7 @@ import {
 } from "../../../store/slices/categorySlice";
 import { useEffect } from "react";
 import slugify from "slugify";
+import { toast } from "react-toastify";
 
 const Category_Form = () => {
   const { id } = useParams();
@@ -31,7 +32,10 @@ const Category_Form = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(getCategoryDataById(id));
+      dispatch(getCategoryDataById(id))
+        .unwrap()
+        .then(() => toast.success("Fetched Data"))
+        .catch((err) => toast.error(err.message));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -88,22 +92,29 @@ const Category_Form = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(data);
     if (id) {
       dispatch(
         updateCategoryData({
           data: data,
           _id: id,
         })
-      ).then(() => {
-        navigate("/dashboard/category");
-      });
+      )
+        .unwrap()
+        .then(() => {
+          reset();
+          toast.success("Category Update Successfully");
+          navigate("/dashboard/category");
+        })
+        .catch((err) => toast.error(err.message));
     } else {
-      console.log(data);
-      dispatch(createCategory(data)).then(() => {
-        reset();
-        navigate("/dashboard/category");
-      });
+      dispatch(createCategory(data))
+        .unwrap()
+        .then(() => {
+          reset();
+          toast.success("Category Created Successfully");
+          navigate("/dashboard/category");
+        })
+        .catch((err) => toast.error(err.message));
     }
   };
 

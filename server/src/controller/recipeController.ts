@@ -104,6 +104,37 @@ const pipelineGenrator = (
           ],
         },
       },
+      /**
+       *  _id: string;
+    name: string;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    img_Base64: string;
+    slug: string;
+    additionalNotes: string;
+    categoryId: ICategory[];
+    ingredients: IRecipe[];
+    description: string;
+    cookingTime: string;
+       */
+      {
+        $group: {
+          _id: "$_id",
+          name: { $first: "$name" },
+          img_Base64: { $first: "$img_Base64" },
+          slug: { $first: "$slug" },
+          categoryId: { $addToSet: "$category" },
+          description: { $first: "$description" },
+          cookingTime: { $first: "$cookingTime" },
+          ingredients: { $first: "$ingredients" },
+          additionalNotes: { $first: "$additionalNotes" },
+          // category: { $addToSet: "$category" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          isActive: { $first: "$isActive" },
+        },
+      },
     ];
     return pipeline;
   } else if (
@@ -132,6 +163,23 @@ const pipelineGenrator = (
       {
         $unwind: "$category",
       },
+      {
+        $group: {
+          _id: "$_id",
+          name: { $first: "$name" },
+          img_Base64: { $first: "$img_Base64" },
+          slug: { $first: "$slug" },
+          categoryId: { $addToSet: "$category" },
+          description: { $first: "$description" },
+          cookingTime: { $first: "$cookingTime" },
+          ingredients: { $first: "$ingredients" },
+          additionalNotes: { $first: "$additionalNotes" },
+          //category: { $addToSet: "$category" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          isActive: { $first: "$isActive" },
+        },
+      },
     ];
     return pipeline;
   } else if (isSearch && !isCategory) {
@@ -156,6 +204,23 @@ const pipelineGenrator = (
       {
         $unwind: "$category",
       },
+      {
+        $group: {
+          _id: "$_id",
+          name: { $first: "$name" },
+          img_Base64: { $first: "$img_Base64" },
+          slug: { $first: "$slug" },
+          categoryId: { $addToSet: "$category" },
+          description: { $first: "$description" },
+          cookingTime: { $first: "$cookingTime" },
+          ingredients: { $first: "$ingredients" },
+          additionalNotes: { $first: "$additionalNotes" },
+          //category: { $addToSet: "$category" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          isActive: { $first: "$isActive" },
+        },
+      },
     ];
     return pipeline;
   } else if (!isCategory && !isSearch) {
@@ -170,6 +235,23 @@ const pipelineGenrator = (
       },
       {
         $unwind: "$category",
+      },
+      {
+        $group: {
+          _id: "$_id",
+          name: { $first: "$name" },
+          img_Base64: { $first: "$img_Base64" },
+          slug: { $first: "$slug" },
+          categoryId: { $addToSet: "$category" },
+          description: { $first: "$description" },
+          cookingTime: { $first: "$cookingTime" },
+          ingredients: { $first: "$ingredients" },
+          additionalNotes: { $first: "$additionalNotes" },
+          //category: { $addToSet: "$category" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          isActive: { $first: "$isActive" },
+        },
       },
     ];
     return pipeline;
@@ -362,7 +444,7 @@ export const updateRecipe = asyncHandler(
     recipe.description = description || recipe.description;
     recipe.cookingTime = cookingTime || recipe.cookingTime;
     recipe.ingredients = ingredients || recipe.ingredients;
-    const response = await Recipe.updateOne({ _id }, req.body, {
+    const response = await Recipe.findOneAndUpdate({ _id }, req.body, {
       new: true,
     }).populate("categoryId");
     res

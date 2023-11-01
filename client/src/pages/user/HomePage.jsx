@@ -27,6 +27,8 @@ const HomePage = () => {
     (state) => state?.recipe?.allRecipeData
   );
   console.log(recipes);
+  console.log(count);
+  // console.log(count[0].count);
 
   useEffect(() => {
     fetchData(page, limit, searchTerm);
@@ -59,7 +61,9 @@ const HomePage = () => {
     navigate(`/recipe/${slug}`);
   };
 
-  const pageCount = Math.ceil(count / limit);
+  const pageCount = Math.ceil(
+    count !== undefined ? count[0]?.count / limit : 1
+  );
 
   // const [categoryValue, setCategoryValue] = useState([]);
 
