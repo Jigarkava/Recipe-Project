@@ -1,20 +1,16 @@
 import * as Yup from "yup";
 
 const recipeSchema = Yup.object({
-  // categoryId: Yup.array()
-  //   .of(
-  //     Yup.object().shape({
-  //       name: Yup.string(),
-  //       _id: Yup.string(),
-  //     })
-  //   )
-  //   .min(1, "CategoryId are required"),
+  categoryId: Yup.array()
+    .of(Yup.string())
+    .min(1, "Please select at least one category")
+    .required("Category is required"),
   name: Yup.string()
-    .required("Please Enter Category Name")
-    .min(2, "Category Name Must Be At Least 2 Characters")
+    .required("Please Enter Recipe Name")
+    .min(2, "Recipe Name Must Be At Least 2 Characters")
     .matches(
       /^[a-zA-Z\s][a-zA-Z0-9\s]*$/,
-      "Category Name Must Start With a Letter"
+      "Recipe Name Must Start With a Letter"
     ),
   description: Yup.string().required("Please Enter Description"),
   cookingTime: Yup.string()

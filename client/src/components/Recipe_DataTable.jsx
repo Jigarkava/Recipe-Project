@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Pagination from "@mui/material/Pagination";
 import Select from "@mui/material/Select";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import classes from "./table.module.css";

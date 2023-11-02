@@ -50,6 +50,8 @@ const Category_Form = () => {
     formState: { errors },
   } = useForm({
     mode: "all",
+    // ! pre fill form
+
     values:
       id !== undefined
         ? getDataByID?.category
@@ -59,7 +61,6 @@ const Category_Form = () => {
             subName: null,
             description: null,
           },
-    // ! pre fill form
     resolver: yupResolver(categorySchema),
   });
 
@@ -95,7 +96,9 @@ const Category_Form = () => {
   const onCategoryNameChange = (e) => {
     const newName = e.target.value;
     const newSlug = slugify(newName, { lower: true });
+    setValue("name", newName);
     setValue("slug", newSlug);
+    trigger("name");
   };
 
   const onSubmit = (data) => {

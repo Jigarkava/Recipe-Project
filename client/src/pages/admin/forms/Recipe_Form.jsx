@@ -75,6 +75,7 @@ const Category_Form = () => {
             cookingTime: "",
             additionalNotes: "",
             ingredients: [{ name: "", quantity: "", unit: "", extraNote: "" }],
+            categoryId: [],
           },
     resolver: yupResolver(recipeSchema),
   });
@@ -116,7 +117,9 @@ const Category_Form = () => {
   const onCategoryNameChange = (e) => {
     const newName = e.target.value;
     const newSlug = slugify(newName, { lower: true });
+    setValue("name", newName);
     setValue("slug", newSlug);
+    trigger("name");
   };
 
   const onSubmit = (data) => {
@@ -159,12 +162,13 @@ const Category_Form = () => {
                 options={allCategoryData?.categories}
                 getOptionLabel={(option) => option?.name}
                 defaultValue={id && recipeDataById?.recipe?.categoryId}
-                onChange={(e, values) =>
+                onChange={(e, values) => {
                   setValue(
                     "categoryId",
                     values?.map((v) => v?._id)
-                  )
-                }
+                  );
+                  trigger("categoryId");
+                }}
                 filterSelectedOptions
                 renderInput={(params) => (
                   <TextField
