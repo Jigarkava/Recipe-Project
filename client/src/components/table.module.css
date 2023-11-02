@@ -24,7 +24,7 @@ td {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 35px;
+  margin: 30px 0px;
 }
 th {
   color: #003f7d;

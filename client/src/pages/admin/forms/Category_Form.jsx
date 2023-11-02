@@ -24,7 +24,7 @@ import { toast } from "react-toastify";
 
 const Category_Form = () => {
   const { id } = useParams();
-  console.log(id);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -34,9 +34,9 @@ const Category_Form = () => {
     if (id) {
       dispatch(getCategoryDataById(id))
         .unwrap()
-        .then(() => toast.success("Fetched Data"))
         .catch((err) => toast.error(err.message));
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,8 +50,15 @@ const Category_Form = () => {
     formState: { errors },
   } = useForm({
     mode: "all",
-    // defaultValues: id !== undefined ? getDataByID?.category : {},
-    values: id !== undefined ? getDataByID?.category : {},
+    values:
+      id !== undefined
+        ? getDataByID?.category
+        : {
+            name: null,
+            slug: null,
+            subName: null,
+            description: null,
+          },
     // ! pre fill form
     resolver: yupResolver(categorySchema),
   });
@@ -68,7 +75,7 @@ const Category_Form = () => {
       setValue("img_Base64", reader.result);
       trigger("img_Base64");
     };
-    console.log(selectedFile);
+
     trigger("img_Base64");
   };
 
@@ -103,7 +110,8 @@ const Category_Form = () => {
         .then(() => {
           reset();
           toast.success("Category Update Successfully");
-          navigate("/dashboard/category");
+          // navigate("/dashboard/category");
+          navigate("/dashboard");
         })
         .catch((err) => toast.error(err.message));
     } else {
@@ -112,7 +120,8 @@ const Category_Form = () => {
         .then(() => {
           reset();
           toast.success("Category Created Successfully");
-          navigate("/dashboard/category");
+          // navigate("/dashboard/category");
+          navigate("/dashboard");
         })
         .catch((err) => toast.error(err.message));
     }

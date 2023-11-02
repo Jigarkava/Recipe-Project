@@ -41,7 +41,6 @@ const Recipe_DatTable = () => {
 
   const { allRecipeData, isLoading } = useSelector((state) => state?.recipe);
 
-  console.log(allRecipeData);
   useEffect(() => {
     if (searchTerm === "") {
       fetchData(page, limit, searchTerm);
@@ -55,12 +54,11 @@ const Recipe_DatTable = () => {
       limit: currentLimit,
       searchTerm: searchTerms,
     };
-    console.log(queryParams);
+
     dispatch(getRecipeData(queryParams));
   };
 
   const handlePageChange = (event, newPage) => {
-    console.log(newPage);
     setPage(newPage);
   };
 
@@ -80,7 +78,6 @@ const Recipe_DatTable = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = (id) => {
-    console.log(id);
     setCategoryIdToDelete(id);
     setIsOpen(true);
   };
@@ -142,9 +139,9 @@ const Recipe_DatTable = () => {
       ) : (
         <table cellSpacing={0}>
           <thead className={classes.tblHeader}>
-            <th className={classes.theader}>Category Name</th>
+            <th className={classes.theader}>Recipe Name</th>
             <th className={classes.theader}>Slug</th>
-            <th className={classes.theader}>Sub Heading</th>
+            <th className={classes.theader}>Cooking Time</th>
             <th className={classes.theader}>Description</th>
             <th className={classes.theader}>Image</th>
             <th className={classes.theader}>View</th>

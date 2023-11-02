@@ -10,14 +10,14 @@ const RecipeCard = ({ image, recipeName, handleClick }) => {
         alignItems: "center",
         width: 368,
         borderRadius: 6,
-        boxShadow: 1,
+        boxShadow: 2,
       }}
     >
       <Box
         sx={{
           width: "100%",
-          height: "250px", // Set a fixed height for the image container
-          overflow: "hidden", // Hide any overflowing content
+          height: "250px",
+          overflow: "hidden",
         }}
       >
         <img

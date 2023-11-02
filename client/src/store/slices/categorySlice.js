@@ -80,6 +80,7 @@ const categorySlice = createSlice({
   name: "categoryData",
   initialState,
   extraReducers: (builder) => {
+    // !getCategoryData
     builder.addCase(getCategoryData.pending, (state) => {
       state.isLoading = true;
     });
@@ -88,7 +89,7 @@ const categorySlice = createSlice({
       state.isLoading = false;
       state.allCategoryData = action.payload;
     });
-
+    // ! GetCategoryDataById
     builder.addCase(getCategoryDataById.pending, (state) => {
       state.status = true;
     });
@@ -99,14 +100,5 @@ const categorySlice = createSlice({
     });
   },
 });
-
-export const {
-  addApplicantData,
-  addDependentsData,
-  editDependentData,
-  deleteDependent,
-  proceedAllData,
-  clearAllData,
-} = categorySlice.actions;
 
 export default categorySlice.reducer;

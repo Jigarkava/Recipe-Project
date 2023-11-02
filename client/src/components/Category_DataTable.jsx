@@ -32,7 +32,6 @@ const Category_DatTable = () => {
   };
 
   const handleDelete = (id) => {
-    console.log(id);
     dispatch(deleteCategoryData(id))
       .unwrap()
       .then(() => {
@@ -48,10 +47,7 @@ const Category_DatTable = () => {
     (state) => state?.category
   );
 
-  console.log(allCategoryData);
-
   useEffect(() => {
-    console.log("ok");
     if (searchTerm === "") {
       fetchData(page, limit, searchTerm);
     }
@@ -64,15 +60,13 @@ const Category_DatTable = () => {
       limit: currentLimit,
       searchTerm: searchTerms,
     };
-    console.log(queryParams);
+
     dispatch(getCategoryData(queryParams))
       .unwrap()
-      // .then(() => {})
       .catch((err) => toast.error(err));
   };
 
   const handlePageChange = (event, newPage) => {
-    console.log(newPage);
     setPage(newPage);
   };
 
@@ -90,7 +84,6 @@ const Category_DatTable = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = (id) => {
-    console.log(id);
     setCategoryIdToDelete(id);
     setIsOpen(true);
   };
@@ -98,8 +91,6 @@ const Category_DatTable = () => {
   const handleClose = () => {
     setIsOpen(false);
   };
-
-  console.warn("Component re rendereddd");
 
   return (
     <div

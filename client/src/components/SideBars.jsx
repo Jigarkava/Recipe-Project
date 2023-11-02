@@ -1,6 +1,9 @@
 import "./sidebar.css";
 import { useState } from "react";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import LogoutIcon from "@mui/icons-material/Logout";
+// import HomeIcon from "@mui/icons-material/Home";
+import CategoryIcon from "@mui/icons-material/Category";
 
 import {
   Sidebar,
@@ -12,6 +15,7 @@ import {
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "../store/slices/authSlice";
+import Logo from "../assets/Logo.png";
 
 function Sidebars() {
   //const { collapseSidebar } = useProSidebar();
@@ -59,7 +63,7 @@ function Sidebars() {
                     letterSpacing: "1px",
                   }}
                 >
-                  YOUR LOGO!..
+                  <img src={Logo} height={28} alt="Logo" />
                 </div>
               </MenuItem>
             )}
@@ -67,18 +71,18 @@ function Sidebars() {
           </Menu>
 
           <Menu>
-            <MenuItem icon={<MenuBookIcon />}>
+            {/* <MenuItem icon={<HomeIcon />}>
               <Link to="/dashboard">Dashboard</Link>
-            </MenuItem>
-            <SubMenu defaultOpen label={"Category"} icon={""}>
+            </MenuItem> */}
+            <SubMenu defaultOpen label={"Category"} icon={<CategoryIcon />}>
               <MenuItem icon={""}>
-                <Link to="category">All Category</Link>
+                <Link to="/dashboard">All Category</Link>
               </MenuItem>
               <MenuItem icon={""}>
                 <Link to="add_category">Add Category</Link>
               </MenuItem>
             </SubMenu>
-            <SubMenu defaultOpen label={"Recipe"} icon={""}>
+            <SubMenu defaultOpen label={"Recipe"} icon={<MenuBookIcon />}>
               <MenuItem icon={""}>
                 <Link to="recipe">All Recipe</Link>
               </MenuItem>
@@ -86,7 +90,7 @@ function Sidebars() {
                 <Link to="add_recipe">Add Recipe</Link>
               </MenuItem>
             </SubMenu>
-            <MenuItem>
+            <MenuItem icon={<LogoutIcon />}>
               <Link to="/login" onClick={() => dispatch(setLogout())}>
                 Logout
               </Link>

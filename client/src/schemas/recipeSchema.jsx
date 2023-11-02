@@ -1,6 +1,14 @@
 import * as Yup from "yup";
 
 const recipeSchema = Yup.object({
+  // categoryId: Yup.array()
+  //   .of(
+  //     Yup.object().shape({
+  //       name: Yup.string(),
+  //       _id: Yup.string(),
+  //     })
+  //   )
+  //   .min(1, "CategoryId are required"),
   name: Yup.string()
     .required("Please Enter Category Name")
     .min(2, "Category Name Must Be At Least 2 Characters")

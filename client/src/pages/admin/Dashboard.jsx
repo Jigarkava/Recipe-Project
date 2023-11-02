@@ -1,10 +1,9 @@
-
 const Dashboard = () => {
   return (
     <>
-    <h1>hello</h1>
+      <h1>Welcome Admin</h1>
     </>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

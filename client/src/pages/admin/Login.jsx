@@ -66,8 +66,7 @@ const Login = () => {
       <Box
         sx={{
           backgroundColor: "#eef2f6",
-          height: "100vh",
-          color: "red",
+          height: "87vh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

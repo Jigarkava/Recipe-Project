@@ -30,7 +30,6 @@ const HomePage = () => {
   );
   console.log(recipes);
   console.log(count);
-  // console.log(count[0].count);
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -77,15 +76,11 @@ const HomePage = () => {
     count !== undefined ? count[0]?.count / limit : 1
   );
 
-  // const [categoryValue, setCategoryValue] = useState([]);
-
-  // console.log(categoryValue);
-
   return (
-    <>
+    <Box sx={{ backgroundColor: "#fafafa", height: "80%" }}>
       <Box
         sx={{
-          width: "100vw",
+          width: "100%",
           display: "flex",
           justifyContent: "space-between",
           pr: 12,
@@ -159,7 +154,7 @@ const HomePage = () => {
           <MenuItem value={50}>50</MenuItem>
         </Select>
       </div>
-    </>
+    </Box>
   );
 };
 

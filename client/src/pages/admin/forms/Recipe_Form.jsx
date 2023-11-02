@@ -52,12 +52,10 @@ const Category_Form = () => {
 
   console.log("allCategoryData", allCategoryData);
 
-  // const isEdit = recipeDataById !== undefined;
-
   const {
     register,
     handleSubmit,
-    // reset,
+    reset,
     watch,
     setValue,
     trigger,
@@ -66,13 +64,16 @@ const Category_Form = () => {
   } = useForm({
     mode: "all",
     // ! pre fill form
-    // defaultValues: isEdit
-    //   ? recipeDataById?.recipe
-    //   : { ingredients: [{ name: "", quantity: "", unit: "", extraNote: "" }] },
+
     values:
       id !== undefined
         ? recipeDataById?.recipe
         : {
+            name: "",
+            slug: "",
+            description: "",
+            cookingTime: "",
+            additionalNotes: "",
             ingredients: [{ name: "", quantity: "", unit: "", extraNote: "" }],
           },
     resolver: yupResolver(recipeSchema),
@@ -131,7 +132,7 @@ const Category_Form = () => {
     } else {
       console.log(data);
       dispatch(createRecipe(data)).then(() => {
-        // reset();
+        reset();
         navigate("/dashboard/recipe");
       });
     }
@@ -147,7 +148,7 @@ const Category_Form = () => {
         <Grid p={3} container spacing={2}>
           <Grid item sm={12}>
             <Typography variant="h4" textAlign={"center"} color={"purple"}>
-              Add Recipe
+              {id ? "Edit" : "Add"} Recipe
             </Typography>
           </Grid>
 
@@ -157,7 +158,6 @@ const Category_Form = () => {
                 multiple
                 options={allCategoryData?.categories}
                 getOptionLabel={(option) => option?.name}
-                // defaultValue={defaultCategoryData}
                 defaultValue={id && recipeDataById?.recipe?.categoryId}
                 onChange={(e, values) =>
                   setValue(
@@ -171,8 +171,8 @@ const Category_Form = () => {
                     {...params}
                     label="Categories"
                     placeholder="Select Categories"
-                    error={!!errors.selectedcategory}
-                    helperText={errors.selectedcategory?.message}
+                    error={!!errors.categoryId}
+                    helperText={errors.categoryId?.message}
                   />
                 )}
               />
