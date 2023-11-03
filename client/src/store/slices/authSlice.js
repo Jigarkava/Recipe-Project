@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../utils/api";
 
 const initialState = {
-  isAuthenticated: false,
   token: null,
 };
 
@@ -23,12 +22,10 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setLogin: (state, action) => {
-      state.isAuthenticated = true;
       state.token = action.payload.token;
       localStorage.setItem("token", JSON.stringify(action.payload.token));
     },
     setLogout: (state) => {
-      state.isAuthenticated = false;
       state.token = null;
       localStorage.removeItem("token");
     },

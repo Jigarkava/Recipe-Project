@@ -10,7 +10,6 @@ const AdminLayout = () => {
         style={{
           width: "250px",
           backgroundColor: "#f0f0f0",
-          // padding: "20px",
           marginRight: "20px",
           position: "fixed",
           height: "100%",

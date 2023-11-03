@@ -3,7 +3,7 @@ import Recipe_DatTable from "../../components/Recipe_DataTable";
 const Recipe = () => {
   return (
     <>
-      <h1>Recipe</h1>
+      <h1>All Recipes</h1>
       <Recipe_DatTable />
     </>
   );

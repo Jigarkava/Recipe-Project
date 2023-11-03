@@ -2,7 +2,6 @@ import "./sidebar.css";
 import { useState } from "react";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import LogoutIcon from "@mui/icons-material/Logout";
-// import HomeIcon from "@mui/icons-material/Home";
 import CategoryIcon from "@mui/icons-material/Category";
 
 import {
@@ -18,7 +17,6 @@ import { setLogout } from "../store/slices/authSlice";
 import Logo from "../assets/Logo.png";
 
 function Sidebars() {
-  //const { collapseSidebar } = useProSidebar();
   const [collapsed, setCollapsed] = useState(false);
 
   const dispatch = useDispatch();
@@ -45,19 +43,12 @@ function Sidebars() {
         <main>
           <Menu>
             {collapsed ? (
-              <MenuItem
-                // icon={<FiChevronsRight />}
-                onClick={handleCollapsedChange}
-              ></MenuItem>
+              <MenuItem onClick={handleCollapsedChange}></MenuItem>
             ) : (
-              <MenuItem
-                // suffix={<FiChevronsLeft />}
-                onClick={handleCollapsedChange}
-              >
+              <MenuItem onClick={handleCollapsedChange}>
                 <div
                   style={{
                     padding: "9px",
-                    // textTransform: "uppercase",
                     fontWeight: "bold",
                     fontSize: 14,
                     letterSpacing: "1px",
@@ -71,22 +62,19 @@ function Sidebars() {
           </Menu>
 
           <Menu>
-            {/* <MenuItem icon={<HomeIcon />}>
-              <Link to="/dashboard">Dashboard</Link>
-            </MenuItem> */}
             <SubMenu defaultOpen label={"Category"} icon={<CategoryIcon />}>
-              <MenuItem icon={""}>
+              <MenuItem>
                 <Link to="/dashboard">All Category</Link>
               </MenuItem>
-              <MenuItem icon={""}>
+              <MenuItem>
                 <Link to="add_category">Add Category</Link>
               </MenuItem>
             </SubMenu>
             <SubMenu defaultOpen label={"Recipe"} icon={<MenuBookIcon />}>
-              <MenuItem icon={""}>
+              <MenuItem>
                 <Link to="recipe">All Recipe</Link>
               </MenuItem>
-              <MenuItem icon={""}>
+              <MenuItem>
                 <Link to="add_recipe">Add Recipe</Link>
               </MenuItem>
             </SubMenu>

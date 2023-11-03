@@ -23,7 +23,6 @@ export const createCategory = createAsyncThunk(
 export const getCategoryData = createAsyncThunk(
   "getCategoryData",
   async (payload, { rejectWithValue }) => {
-    console.log(payload);
     try {
       const response = await api.get("/category", {
         params: payload,
@@ -40,7 +39,6 @@ export const updateCategoryData = createAsyncThunk(
   async ({ data, _id }, { rejectWithValue }) => {
     try {
       const response = await api.put(`/category/${_id}`, data);
-      console.log(response.data);
       return response;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -51,10 +49,8 @@ export const updateCategoryData = createAsyncThunk(
 export const deleteCategoryData = createAsyncThunk(
   "deleteCategoryData",
   async (_id, { rejectWithValue }) => {
-    console.log(_id);
     try {
       const response = await api.delete(`/category/${_id}`);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

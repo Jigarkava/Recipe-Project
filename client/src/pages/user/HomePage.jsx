@@ -28,9 +28,6 @@ const HomePage = () => {
   const { recipes, count } = useSelector(
     (state) => state?.recipe?.allRecipeData
   );
-  console.log(recipes);
-  console.log(count);
-
   useEffect(() => {
     if (searchTerm === "") {
       fetchData(page, limit, searchTerm, categoryId);
@@ -43,8 +40,6 @@ const HomePage = () => {
     (state) => state?.category?.allCategoryData
   );
 
-  console.log("allCategoryData", allCategoryData);
-
   const fetchData = (currentPage, currentLimit, searchTerms, categoryId) => {
     const queryParams = {
       pageNumber: currentPage,
@@ -56,7 +51,6 @@ const HomePage = () => {
   };
 
   const handlePageChange = (event, newPage) => {
-    console.log(newPage);
     setPage(newPage);
   };
 

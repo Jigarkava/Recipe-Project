@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../utils/api";
-import { toast } from "react-toastify";
 
 let initialState = {
   allRecipeData: [],
@@ -12,14 +11,12 @@ let initialState = {
 
 export const createRecipe = createAsyncThunk(
   "createRecipe",
-  async (dispatch) => {
+  async (dispatch, { rejectWithValue }) => {
     try {
       const response = await api.post("/recipe", dispatch);
-      toast.success("Recipe Created Successfully");
-      console.log(response);
       return response;
     } catch (error) {
-      toast.error("Something went wrong");
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -27,12 +24,10 @@ export const createRecipe = createAsyncThunk(
 export const getRecipeData = createAsyncThunk(
   "getRecipeData",
   async (payload, { rejectWithValue }) => {
-    console.log(payload);
     try {
       const response = await api.get("/recipe", {
         params: payload,
       });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -43,10 +38,8 @@ export const getRecipeData = createAsyncThunk(
 export const deleteRecipeData = createAsyncThunk(
   "deleteRecipeData",
   async (_id, { rejectWithValue }) => {
-    console.log(_id);
     try {
       const response = await api.delete(`/recipe/${_id}`);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -57,14 +50,11 @@ export const deleteRecipeData = createAsyncThunk(
 export const updateRecipeData = createAsyncThunk(
   "updateRecipeData",
   async ({ data, _id }, { rejectWithValue }) => {
-    console.log(data);
-    console.log(_id);
     try {
       const response = await api.put(`/recipe/${_id}`, data);
       console.log(response.data);
-      toast.success("Recipe Updated Successfully");
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -74,7 +64,6 @@ export const getRecipeById = createAsyncThunk(
   async (_id, { rejectWithValue }) => {
     try {
       const response = await api.get(`/recipe/${_id}`);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -87,7 +76,6 @@ export const getRecipeBySlug = createAsyncThunk(
   async (slug, { rejectWithValue }) => {
     try {
       const response = await api.get(`/recipe/getRecipeBySlug/${slug}`);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -99,7 +87,6 @@ export const getRecipeBySlug = createAsyncThunk(
 const recipeSlice = createSlice({
   name: "recipeData",
   initialState,
-  //   reducers: {}
   extraReducers: (builder) => {
     // ! getRecipeData
     builder.addCase(getRecipeData.pending, (state) => {

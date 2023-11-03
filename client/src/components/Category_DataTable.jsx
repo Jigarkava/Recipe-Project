@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import Pagination from "@mui/material/Pagination";
-import Select from "@mui/material/Select";
-import { Box } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
+import {
+  Box,
+  Pagination,
+  Select,
+  MenuItem,
+  Button,
+  TextField,
+  Skeleton,
+} from "@mui/material";
 import classes from "./table.module.css";
-import { Skeleton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";

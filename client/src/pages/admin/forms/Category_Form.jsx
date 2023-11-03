@@ -113,7 +113,6 @@ const Category_Form = () => {
         .then(() => {
           reset();
           toast.success("Category Update Successfully");
-          // navigate("/dashboard/category");
           navigate("/dashboard");
         })
         .catch((err) => toast.error(err.message));
@@ -123,7 +122,6 @@ const Category_Form = () => {
         .then(() => {
           reset();
           toast.success("Category Created Successfully");
-          // navigate("/dashboard/category");
           navigate("/dashboard");
         })
         .catch((err) => toast.error(err.message));

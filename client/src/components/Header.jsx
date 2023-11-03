@@ -1,18 +1,9 @@
 import { Box, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Logo from "../assets/Logo.png";
-import { useDispatch } from "react-redux";
-import { setLogout } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 const Header = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // eslint-disable-next-line no-unused-vars
-  const handleLogOut = () => {
-    dispatch(setLogout());
-    navigate("/login");
-  };
 
   return (
     <Box
@@ -46,10 +37,6 @@ const Header = () => {
         >
           SignIn
         </Button>
-
-        {/* <Button onClick={handleLogOut} variant="contained" color="primary">
-          Signout
-        </Button> */}
       </Box>
     </Box>
   );

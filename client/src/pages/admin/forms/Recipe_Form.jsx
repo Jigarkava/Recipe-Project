@@ -15,7 +15,7 @@ import recipeSchema from "../../../schemas/recipeSchema";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import slugify from "slugify";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -35,6 +35,9 @@ const Category_Form = () => {
   const { allRecipeData, recipeDataById, status } = useSelector(
     (state) => state?.recipe
   );
+  const [initValueState, setInitialValue] = useState([]);
+  console.log("initValueState", initValueState);
+
   console.log("allrecipedata", allRecipeData);
   console.log("recipeDataById", recipeDataById);
 
@@ -49,8 +52,6 @@ const Category_Form = () => {
   const allCategoryData = useSelector(
     (state) => state?.category?.allCategoryData
   );
-
-  console.log("allCategoryData", allCategoryData);
 
   const {
     register,
@@ -67,7 +68,12 @@ const Category_Form = () => {
 
     values:
       id !== undefined
-        ? recipeDataById?.recipe
+        ? {
+            ...recipeDataById?.recipe,
+            categoryId: recipeDataById?.recipe?.categoryId?.map(
+              (val) => val._id
+            ) ?? [{ name: "okk" }],
+          }
         : {
             name: "",
             slug: "",
@@ -84,6 +90,23 @@ const Category_Form = () => {
     name: "ingredients",
     control,
   });
+
+  useEffect(() => {
+    setValue(
+      "categoryId",
+      initValueState?.map((v) => v?._id)
+    );
+  }, [initValueState]);
+
+  useEffect(() => {
+    if (!id) {
+      setInitialValue([]);
+      return;
+    }
+    setInitialValue(recipeDataById?.recipe?.categoryId);
+
+    trigger("categoryId");
+  }, [id, recipeDataById]);
 
   const img_Base64 = watch("img_Base64");
 
@@ -123,27 +146,37 @@ const Category_Form = () => {
   };
 
   const onSubmit = (data) => {
+    console.log("data", data);
     if (id) {
       dispatch(
         updateRecipeData({
           data: data,
           _id: id,
         })
-      ).then(() => {
-        navigate("/dashboard/recipe");
-      });
+      )
+        .unwrap()
+        .then(() => {
+          reset();
+          toast.success("Recipe Updated Successfully");
+          navigate("/dashboard/recipe");
+        })
+        .catch((err) => toast.error(err.message));
     } else {
-      console.log(data);
-      dispatch(createRecipe(data)).then(() => {
-        reset();
-        navigate("/dashboard/recipe");
-      });
+      dispatch(createRecipe(data))
+        .unwrap()
+        .then(() => {
+          reset();
+          toast.success("Recipe Created Successfully");
+          navigate("/dashboard/recipe");
+        })
+        .catch((err) => toast.error(err.message));
     }
   };
 
   if (status) {
     return <p>Loading......</p>;
   }
+  console.log("111111", !id ? [] : recipeDataById?.recipe?.categoryId);
 
   return (
     <Box sx={{ backgroundColor: "white" }}>
@@ -156,31 +189,30 @@ const Category_Form = () => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            {allCategoryData?.categories ? (
-              <Autocomplete
-                multiple
-                options={allCategoryData?.categories}
-                getOptionLabel={(option) => option?.name}
-                defaultValue={id && recipeDataById?.recipe?.categoryId}
-                onChange={(e, values) => {
-                  setValue(
-                    "categoryId",
-                    values?.map((v) => v?._id)
-                  );
-                  trigger("categoryId");
-                }}
-                filterSelectedOptions
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Categories"
-                    placeholder="Select Categories"
-                    error={!!errors.categoryId}
-                    helperText={errors.categoryId?.message}
-                  />
-                )}
-              />
-            ) : null}
+            <Autocomplete
+              multiple
+              options={allCategoryData?.categories ?? []}
+              autoSelect={true}
+              getOptionLabel={(option) => option?.name}
+              // defaultValue={id && recipeDataById?.recipe?.categoryId}
+              value={initValueState ?? []}
+              // value={!id && [{ name: "" }]}
+              onChange={(e, values) => {
+                setInitialValue(values);
+                trigger("categoryId");
+              }}
+              // value={!id ? [] : recipeDataById?.recipe?.categoryId}
+              filterSelectedOptions
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Categories"
+                  placeholder="Select Categories"
+                  error={!!errors.categoryId}
+                  helperText={errors.categoryId?.message}
+                />
+              )}
+            />
           </Grid>
           <Grid item xs={12} sm={12}>
             <TextField

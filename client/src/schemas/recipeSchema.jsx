@@ -1,10 +1,10 @@
 import * as Yup from "yup";
 
 const recipeSchema = Yup.object({
-  categoryId: Yup.array()
-    .of(Yup.string())
-    .min(1, "Please select at least one category")
-    .required("Category is required"),
+  // categoryId: Yup.array()
+  //   .of(Yup.string())
+  //   .min(1, "Please select at least one category")
+  //   .required("Category is required"),
   name: Yup.string()
     .required("Please Enter Recipe Name")
     .min(2, "Recipe Name Must Be At Least 2 Characters")
