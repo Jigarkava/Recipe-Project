@@ -1,10 +1,18 @@
 import * as Yup from "yup";
 
 const recipeSchema = Yup.object({
-  // categoryId: Yup.array()
-  //   .of(Yup.string())
-  //   .min(1, "Please select at least one category")
-  //   .required("Category is required"),
+  categoryId: Yup.array()
+    .of(
+      Yup.mixed().test(
+        "is-string-or-object",
+        "Each element must be a string or an object",
+        (value) => {
+          return typeof value === "string" || typeof value === "object";
+        }
+      )
+    )
+    .min(1, "Please select at least one category")
+    .required("Category is required"),
   name: Yup.string()
     .required("Please Enter Recipe Name")
     .min(2, "Recipe Name Must Be At Least 2 Characters")

@@ -194,14 +194,11 @@ const Category_Form = () => {
               options={allCategoryData?.categories ?? []}
               autoSelect={true}
               getOptionLabel={(option) => option?.name}
-              // defaultValue={id && recipeDataById?.recipe?.categoryId}
               value={initValueState ?? []}
-              // value={!id && [{ name: "" }]}
               onChange={(e, values) => {
                 setInitialValue(values);
                 trigger("categoryId");
               }}
-              // value={!id ? [] : recipeDataById?.recipe?.categoryId}
               filterSelectedOptions
               renderInput={(params) => (
                 <TextField
