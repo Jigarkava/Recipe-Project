@@ -45,14 +45,14 @@ const Category_DatTable = () => {
       .catch((err) => toast.error(err.message));
   };
 
-  const { allCategoryData, isLoading } = useSelector(
+  const { allCategoryData, count, isLoading } = useSelector(
     (state) => state?.category
   );
 
+  console.log(count);
+
   useEffect(() => {
-    if (searchTerm === "") {
-      fetchData(page, limit, searchTerm);
-    }
+    fetchData(page, limit, searchTerm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, limit, searchTerm]);
 
@@ -81,7 +81,7 @@ const Category_DatTable = () => {
     fetchData(page, limit, searchTerm);
   };
 
-  const pageCount = Math.ceil(allCategoryData?.count / limit);
+  const pageCount = Math.ceil(count / limit);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -138,7 +138,7 @@ const Category_DatTable = () => {
           </Button>
         </Box>
       </div>
-      {allCategoryData?.categories?.length === 0 ? (
+      {allCategoryData.length === 0 ? (
         <p>No search results found</p>
       ) : (
         <table cellSpacing={0}>
@@ -157,7 +157,7 @@ const Category_DatTable = () => {
                 <hr />
               </td>
             </tr>
-            {allCategoryData?.categories?.map((item) => (
+            {allCategoryData?.map((item) => (
               <tr key={item.id}>
                 <td>{isLoading ? <Skeleton /> : item?.name}</td>
                 <td>{isLoading ? <Skeleton /> : `  ${item?.slug}`}</td>

@@ -3,23 +3,11 @@ import api from "../../utils/api";
 
 let initialState = {
   allCategoryData: [],
-  isLoading: true,
+  count: 0,
+  isLoading: false,
   getDataByID: [],
   status: false,
 };
-
-export const createCategory = createAsyncThunk(
-  "createCategory",
-  async (dispatch, { rejectWithValue }) => {
-    try {
-      const response = await api.post("/category", dispatch);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
 export const getCategoryData = createAsyncThunk(
   "getCategoryData",
   async (payload, { rejectWithValue }) => {
@@ -33,13 +21,26 @@ export const getCategoryData = createAsyncThunk(
     }
   }
 );
+export const createCategory = createAsyncThunk(
+  "createCategory",
+  async (dispatch, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/category", dispatch);
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const updateCategoryData = createAsyncThunk(
   "updateCategoryData",
   async ({ data, _id }, { rejectWithValue }) => {
     try {
       const response = await api.put(`/category/${_id}`, data);
-      return response;
+      console.log(response);
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -50,8 +51,9 @@ export const deleteCategoryData = createAsyncThunk(
   "deleteCategoryData",
   async (_id, { rejectWithValue }) => {
     try {
+      // eslint-disable-next-line no-unused-vars
       const response = await api.delete(`/category/${_id}`);
-      return response.data;
+      return _id;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -76,6 +78,34 @@ const categorySlice = createSlice({
   name: "categoryData",
   initialState,
   extraReducers: (builder) => {
+    // ! CreateCategoryData
+    builder.addCase(createCategory.fulfilled, (state, action) => {
+      console.log("action", action);
+      state.allCategoryData = [
+        action.payload.category,
+        ...state.allCategoryData,
+      ];
+      state.count = state.count + 1;
+    });
+
+    // ! DeleteCategoryData
+    builder.addCase(deleteCategoryData.fulfilled, (state, action) => {
+      state.allCategoryData = state.allCategoryData.filter(
+        (category) => category._id !== action.payload
+      );
+    });
+
+    // ! EditCategoryData
+    builder.addCase(updateCategoryData.fulfilled, (state, action) => {
+      state.allCategoryData = state.allCategoryData.map((category) => {
+        if (category._id === action.payload._id) {
+          return action.payload;
+        } else {
+          return category;
+        }
+      });
+    });
+
     // !getCategoryData
     builder.addCase(getCategoryData.pending, (state) => {
       state.isLoading = true;
@@ -83,7 +113,8 @@ const categorySlice = createSlice({
 
     builder.addCase(getCategoryData.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.allCategoryData = action.payload;
+      state.allCategoryData = action.payload.categories;
+      state.count = action.payload.count;
     });
     // ! GetCategoryDataById
     builder.addCase(getCategoryDataById.pending, (state) => {

@@ -70,9 +70,8 @@ const Category_Form = () => {
       id !== undefined
         ? {
             ...recipeDataById?.recipe,
-            categoryId: recipeDataById?.recipe?.categoryId?.map(
-              (val) => val._id
-            ) ?? [{ name: "okk" }],
+            categoryId:
+              recipeDataById?.recipe?.categoryId?.map((val) => val._id) ?? [],
           }
         : {
             name: "",
