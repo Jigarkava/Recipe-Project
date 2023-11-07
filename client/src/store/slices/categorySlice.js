@@ -39,7 +39,6 @@ export const updateCategoryData = createAsyncThunk(
   async ({ data, _id }, { rejectWithValue }) => {
     try {
       const response = await api.put(`/category/${_id}`, data);
-      console.log(response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -80,7 +79,6 @@ const categorySlice = createSlice({
   extraReducers: (builder) => {
     // ! CreateCategoryData
     builder.addCase(createCategory.fulfilled, (state, action) => {
-      console.log("action", action);
       state.allCategoryData = [
         action.payload.category,
         ...state.allCategoryData,
@@ -93,13 +91,14 @@ const categorySlice = createSlice({
       state.allCategoryData = state.allCategoryData.filter(
         (category) => category._id !== action.payload
       );
+      state.count = state.count - 1;
     });
 
     // ! EditCategoryData
     builder.addCase(updateCategoryData.fulfilled, (state, action) => {
       state.allCategoryData = state.allCategoryData.map((category) => {
-        if (category._id === action.payload._id) {
-          return action.payload;
+        if (category._id === action.payload.category._id) {
+          return action.payload.category;
         } else {
           return category;
         }
@@ -116,6 +115,13 @@ const categorySlice = createSlice({
       state.allCategoryData = action.payload.categories;
       state.count = action.payload.count;
     });
+
+    builder.addCase(getCategoryData.rejected, (state) => {
+      state.isLoading = false;
+      state.allCategoryData = [];
+      state.count = 0;
+    });
+
     // ! GetCategoryDataById
     builder.addCase(getCategoryDataById.pending, (state) => {
       state.status = true;

@@ -7,6 +7,7 @@ let initialState = {
   recipeBySlug: null,
   recipeDataById: [],
   status: false,
+  count: 0,
 };
 
 export const createRecipe = createAsyncThunk(
@@ -14,7 +15,8 @@ export const createRecipe = createAsyncThunk(
   async (dispatch, { rejectWithValue }) => {
     try {
       const response = await api.post("/recipe", dispatch);
-      return response;
+      console.log(response.data);
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -28,6 +30,8 @@ export const getRecipeData = createAsyncThunk(
       const response = await api.get("/recipe", {
         params: payload,
       });
+
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
@@ -39,8 +43,9 @@ export const deleteRecipeData = createAsyncThunk(
   "deleteRecipeData",
   async (_id, { rejectWithValue }) => {
     try {
+      // eslint-disable-next-line no-unused-vars
       const response = await api.delete(`/recipe/${_id}`);
-      return response.data;
+      return _id;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
     }
@@ -53,6 +58,7 @@ export const updateRecipeData = createAsyncThunk(
     try {
       const response = await api.put(`/recipe/${_id}`, data);
       console.log(response.data);
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -88,16 +94,45 @@ const recipeSlice = createSlice({
   name: "recipeData",
   initialState,
   extraReducers: (builder) => {
+    // ! CreateRecipeData
+    builder.addCase(createRecipe.fulfilled, (state, action) => {
+      state.allRecipeData = [action.payload.recipe, ...state.allRecipeData];
+      state.count = state.count + 1;
+    });
+
+    // ! DeleteRecipeData
+    builder.addCase(deleteRecipeData.fulfilled, (state, action) => {
+      state.allRecipeData = state.allRecipeData.filter(
+        (recipe) => recipe._id !== action.payload
+      );
+      state.count = state.count - 1;
+    });
+
+    // ! EditCategoryData
+    builder.addCase(updateRecipeData.fulfilled, (state, action) => {
+      state.allRecipeData = state.allRecipeData.map((recipe) => {
+        if (recipe._id === action.payload.recipe._id) {
+          return action.payload.recipe;
+        } else {
+          return recipe;
+        }
+      });
+    });
+
     // ! getRecipeData
     builder.addCase(getRecipeData.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(getRecipeData.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.allRecipeData = action.payload;
+      state.allRecipeData = action.payload.recipes;
+      state.count =
+        action?.payload?.count[0]?.count || action.payload.recipes.length;
     });
     builder.addCase(getRecipeData.rejected, (state) => {
       state.isLoading = false;
+      state.allRecipeData = [];
+      state.count = 0;
     });
 
     // ! getRecipeByslug

@@ -190,7 +190,7 @@ const Category_Form = () => {
           <Grid item xs={12} sm={12}>
             <Autocomplete
               multiple
-              options={allCategoryData?.categories ?? []}
+              options={allCategoryData ?? []}
               autoSelect={true}
               getOptionLabel={(option) => option?.name}
               value={initValueState ?? []}

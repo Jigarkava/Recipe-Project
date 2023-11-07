@@ -138,7 +138,7 @@ const Category_DatTable = () => {
           </Button>
         </Box>
       </div>
-      {allCategoryData.length === 0 ? (
+      {count === 0 ? (
         <p>No search results found</p>
       ) : (
         <table cellSpacing={0}>

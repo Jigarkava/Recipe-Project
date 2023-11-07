@@ -41,7 +41,13 @@ const Recipe_DatTable = () => {
       });
   };
 
-  const { allRecipeData, isLoading } = useSelector((state) => state?.recipe);
+  const { allRecipeData, isLoading, count } = useSelector(
+    (state) => state?.recipe
+  );
+
+  console.log("count", count);
+  console.log("allrecipeDta", allRecipeData);
+  console.log("Loading", isLoading);
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -73,9 +79,7 @@ const Recipe_DatTable = () => {
     fetchData(page, limit, searchTerm);
   };
 
-  const pageCount = Math.ceil(
-    allRecipeData.count ? allRecipeData.count[0]?.count / limit : 1
-  );
+  const pageCount = Math.ceil(count ? count / limit : 1);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -136,7 +140,7 @@ const Recipe_DatTable = () => {
           </Button>
         </Box>
       </div>
-      {allRecipeData?.recipes?.length === 0 ? (
+      {allRecipeData.length === 0 ? (
         <p>No search results found</p>
       ) : (
         <table cellSpacing={0}>
@@ -155,7 +159,7 @@ const Recipe_DatTable = () => {
                 <hr />
               </td>
             </tr>
-            {allRecipeData?.recipes?.map((item) => (
+            {allRecipeData?.map((item) => (
               <tr key={item.id}>
                 <td>{isLoading ? <Skeleton /> : item?.name}</td>
                 <td>{isLoading ? <Skeleton /> : `  ${item?.slug}`}</td>
